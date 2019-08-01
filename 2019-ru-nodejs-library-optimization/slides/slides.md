@@ -178,7 +178,7 @@ setImmediate(this.run.bind(this));
 
 # Старый бенчмарк: минусы
 
-* Зависимость от `setImmediate()`
+* Зависимость от `setImmediate()` (macrotask)
 * Нет ограничений по кол-ву операций (concurrency limit, backpressure)
 * Операции и значения выбираются случайным образом
 * Это снижает результаты и детерменистичность
@@ -212,9 +212,98 @@ op3->|op5-->|op7->| finish
 
 # Сценарий
 
-* Приложение-бенчмарк
+* Приложение-бенчмарк с клиентской библиотекой
 * Кластер из одной ноды IMDG 3.12 (Docker контейнер)
 * Запуск на локальной машине (loopback address)
 * Операции: `IMap.get()` и `IMap.set()`
-* Данные: фиксированные строки с ASCII-символами
+* Данные: фиксированные строки с ASCII-символами (3 B, 1 KB, 100 KB)
 * Замер: несколько запусков и вычисление среднего результата
+* Каждый запуск: 1 млн операций с лимитом 100
+
+---
+
+# Инструмент #1
+
+* Стандартный профилировщик Node.js
+* Основан на V8 sample-based profiler
+* Учитывает JS и C++ код
+* `node --prof app.js`
+* Можно получить человекочитаемое представление:
+`node --prof-process isolate-0xnnnnnnnnnnnn-v8.log > processed.txt`
+
+---
+
+# Пример вывода
+
+```
+ [Summary]:
+   ticks  total  nonlib   name
+   4144   77.3%   78.0%  JavaScript
+   1157   21.6%   21.8%  C++
+    374    7.0%    7.0%  GC
+     51    1.0%          Shared libraries
+     11    0.2%          Unaccounted
+
+ [JavaScript]:
+   ticks  total  nonlib   name
+   2104   39.2%   39.6%  Builtin: StringAdd_CheckNone_NotTenured
+   1312   24.5%   24.7%  LazyCompile: *<anonymous> :1:20
+    484    9.0%    9.1%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:68:7
+
+...
+```
+
+---
+
+# Инструмент #2
+
+* Визуализация профиля в виде flame graph
+* Действительно помогает обнаруживать ботлнеки
+* Отлично работает для event loop'а Node.js
+* Спасибо Brendan Gregg, Netflix
+
+```bash
+$ npm install -g flamebearer
+$ node --prof-process --preprocess -j isolate*.log | flamebearer
+```
+
+---
+
+# Пример flame graph
+
+TODO: добавить картинку
+
+---
+
+# Инструмент #3
+
+* Профилировщик памяти из Chrome DevTools (Node.js)
+* Умеет делать heap snapshot, отслеживать аллокации
+
+![w:720 center drop-shadow](./images/chrome-devtools-example.png)
+
+---
+
+# Инструмент #4
+
+* Микробенчмарки для быстрой проверки гипотез
+* Использовался фреймворк Benchmark.js (+ node-microtime)
+
+---
+
+# 4. Оптимизация: гипотезы, эксперименты, результаты
+
+---
+
+# Базовый замер
+
+`set('foo', 'bar')` | `set()` 1 KB | `set()` 100 KB | `get('foo', 'bar')` | `get()` 1 KB | `get()` 100 KB
+------------ | ------------ | ------------ | ------------ | ------------ | ------------
+76 011 | 44 324 | 1 558 | 90 933 | 23 591 | 105
+
+---
+
+# Видны проблемы?
+
+* С увеличением размера данных производительность падает линейно
+* Java клиент в сценарии для `get('foo', 'bar')` быстрее примерно в 5 раз (конечно, сравнение некорректное)
