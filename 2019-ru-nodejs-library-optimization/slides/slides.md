@@ -262,15 +262,16 @@ op3->|op5-->|op7->| finish
 * Действительно помогает обнаруживать ботлнеки
 * Отлично работает для event loop'а Node.js
 * Спасибо Brendan Gregg, Netflix
+* Использовался flamebearer, который дружит с V8 profiler
+
+---
+
+# Пример flame graph
 
 ```bash
 $ npm install -g flamebearer
 $ node --prof-process --preprocess -j isolate*.log | flamebearer
 ```
-
----
-
-# Пример flame graph
 
 TODO: добавить картинку
 
@@ -319,3 +320,23 @@ TODO: добавить картинку
 
 * С увеличением размера данных производительность падает линейно
 * Java клиент в сценарии для `get('foo', 'bar')` быстрее примерно в 5 раз (сравнение заведомо некорректное)
+
+---
+
+TODO: тут будет еще куча слайдов
+
+---
+
+# Полезные ссылки
+
+* https://hazelcast.org/
+* https://github.com/hazelcast/hazelcast-nodejs-client
+* https://nodejs.org/en/docs/guides/simple-profiling/
+* https://nodejs.org/en/docs/guides/dont-block-the-event-loop/
+* https://blog.insiderattack.net/event-loop-and-the-big-picture-nodejs-event-loop-part-1-1cb67a182810
+
+---
+
+# Спасибо за внимание!
+
+## Время для Q&A
