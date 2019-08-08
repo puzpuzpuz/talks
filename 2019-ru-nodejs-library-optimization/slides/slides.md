@@ -403,7 +403,15 @@ TODO: таблица с результатами
 
 # Причины?
 
-TODO: найти fast path для LATIN-1 в стандартном API
+TODO: ниже расписан fast path для LATIN-1 в стандартном API; нужно "причесать" этот слайд
+* `Buffer.toString()`: https://github.com/nodejs/node/blob/v10.15.3/lib/buffer.js#L667
+* `buffer.js#stringSlice`: https://github.com/nodejs/node/blob/v10.15.3/lib/buffer.js#L594
+* https://github.com/nodejs/node/blob/v10.15.3/src/node_buffer.cc#L452
+* https://github.com/nodejs/node/blob/v10.15.3/src/string_bytes.cc#L665
+* https://github.com/v8/v8/blob/lkgr/6.8/src/api.cc#L6622
+* https://github.com/v8/v8/blob/lkgr/6.8/src/heap/factory.cc#L609
+* https://github.com/v8/v8/blob/lkgr/6.8/src/heap/factory.cc#L583
+
 
 ---
 
