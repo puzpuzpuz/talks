@@ -8,6 +8,10 @@ img[alt~="center"] {
   display: block;
   margin: 0 auto;
 }
+
+table td {
+  width: 150px;
+}
 </style>
 
 # История одной оптимизации производительности Node.js библиотеки
@@ -179,7 +183,7 @@ setImmediate(this.run.bind(this));
 * Зависимость от `setImmediate()` (macrotask)
 * Нет ограничений по кол-ву операций (concurrency limit, backpressure)
 * Операции и значения выбираются случайным образом
-* Это снижает результаты и детерменистичность
+* Это снижает результаты и детерминированность
 
 ---
 
@@ -253,9 +257,10 @@ op3->  |op6-->    |op7->| finish
    ticks  total  nonlib   name
    2104   39.2%   39.6%  Builtin: StringAdd_CheckNone_NotTenured
    1312   24.5%   24.7%  LazyCompile: *<anonymous> :1:20
-    484    9.0%    9.1%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:68:7
-
-...
+    484    9.0%    9.1%  LazyCompile: *suite.add ./app.js:68:7
+    ...
+      8    0.1%    0.2%  LazyCompile: ~<anonymous> ./util.js:51:44
+ ...
 ```
 
 ---
@@ -269,23 +274,29 @@ op3->  |op6-->    |op7->| finish
 * Наиболее популярный инструмент - [0x](https://github.com/davidmarkclements/0x) (V8, perf, DTrace)
 * Мы использовали [flamebearer](https://github.com/mapbox/flamebearer) (V8)
 
----
-
-# Пример flame graph
-
 ```bash
 $ npm install -g flamebearer
 $ node --prof-process --preprocess -j isolate*.log | flamebearer
 ```
 
-TODO: добавить картинку
+---
+
+# Пример простейшего flame graph
+
+![w:980 center](./images/flame-graph-example.png)
+
+---
+
+# Пример flame graph из реального мира
+
+![w:980 center](./images/flame-graph-complex-example.png)
 
 ---
 
 # Инструмент #3
 
 * Профилировщик памяти из Chrome DevTools (Node.js)
-* Умеет делать heap snapshot, отслеживать аллокации
+* Умеет делать heap snapshot, отслеживать аллокации и не только
 
 ![w:720 center drop-shadow](./images/chrome-devtools-example.png)
 
@@ -294,7 +305,16 @@ TODO: добавить картинку
 # Инструмент #4
 
 * Микробенчмарки для быстрой проверки гипотез
-* Использовался фреймворк Benchmark.js (+ node-microtime)
+* Использовался фреймворк [Benchmark.js](https://benchmarkjs.com/) (+ node-microtime)
+* *Предупреждение*: могут показывать температуру в Антарктиде
+
+---
+
+# Инструмент #5
+
+* Proof of concept (PoC)
+* Все средства хороши, но нужен весь функционал кода на горячем пути
+* *П.С.*: это не совсем инструмент, но не упомянуть нельзя
 
 ---
 
@@ -315,28 +335,24 @@ TODO: добавить картинку
 
 # Базовый замер
 
-`set('foo', 'bar')` | `set()` 1 KB | `set()` 100 KB | `get('foo', 'bar')` | `get()` 1 KB | `get()` 100 KB
------------- | ------------ | ------------ | ------------ | ------------ | ------------
-76 011 | 44 324 | 1 558 | 90 933 | 23 591 | 105
+&nbsp; | 3 B | 1 KB | 100 KB
+------------:|------------:| ------------:| ------------:
+`Map#get()` | 90 933 | 23 591 | 105
+`Map#set()` | 76 011 | 44 324 | 1 558
 
 ---
 
 # Видны проблемы?
 
-* Java-клиент для `get('foo', 'bar')` быстрее примерно в 5 раз (сравнение заведомо некорректное)
+* Java-клиент для `get('foo', 'bar')` быстрее примерно в 5 раз
+(сравнение заведомо некорректное)
 * Производительность практически линейно зависит от размера данных
 
 ---
 
 # Профилировщик, приди! (запись 3 B)
 
-TODO: вставить картинку
-
----
-
-# Профилировщик, приди! (запись 3 B)
-
-TODO: вставить картинку с выноской
+![w:1080 center](./images/old-set-3B-flamegraph.png)
 
 ---
 
@@ -351,6 +367,10 @@ TODO: вставить картинку с выноской
 # PoC с полумерами
 
 TODO: расписать
+
+`set()`<br/>3 B | `set()`<br/>1 KB | `set()`<br/>100 KB | `get()`<br/>3 B | `get()`<br/>1 KB | `get()`<br/>100 KB
+------------:| ------------:| ------------:| ------------:| ------------:| ------------:
+76 011 | 44 324 | 1 558 | 90 933 | 23 591 | 105
 
 ---
 
