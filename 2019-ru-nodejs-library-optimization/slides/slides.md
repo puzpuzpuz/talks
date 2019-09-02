@@ -167,23 +167,27 @@ console.log(cached); // bar
 # Старый бенчмарк
 
 ```javascript
-var key = Math.random() * ENTRY_COUNT;
-var opType = Math.floor(Math.random() * 100);
-if (opType < GET_PERCENTAGE) {
-    this.map.get(key).then(this.increment.bind(this));
+// ...
+run: function () {
+  var key = Math.random() * ENTRY_COUNT;
+  var opType = Math.floor(Math.random() * 100);
+  if (opType < GET_PERCENTAGE) {
+      this.map.get(key).then(this.increment.bind(this));
+  }
+  // ...
+  setImmediate(this.run.bind(this));
 }
 // ...
-setImmediate(this.run.bind(this));
 ```
 
 ---
 
 # Старый бенчмарк: минусы
 
-* Зависимость от `setImmediate()` (macrotask)
-* Нет ограничений по кол-ву операций (concurrency limit, backpressure)
-* Операции и значения выбираются случайным образом
-* Это снижает результаты и детерминированность
+* Все операции стартуют через рекурсивный `setImmediate()`
+* Нет ограничений по количеству операций (concurrency limit, backpressure)
+* Операции и входные данные выбираются случайным образом
+* Все это снижает результат и ухудшает детерминированность
 
 ---
 
@@ -197,6 +201,14 @@ const benchmark = new Benchmark({
 });
 await benchmark.run();
 ```
+
+---
+
+# Новый бенчмарк: плюсы
+
+* Операции стартуют параллельно
+* Общее число одновременно стартованных операций ограничено
+* Операции и входные данные предопределены
 
 ---
 
@@ -221,7 +233,7 @@ op3->  |op6-->    |op7->| finish
 # Сценарий бенчмарка
 
 * Приложение-бенчмарк с клиентской библиотекой
-* Кластер из одной ноды IMDG (Docker контейнер)
+* Кластер из одной ноды IMDG (Docker-контейнер)
 * Локальная машина (loopback address)
 * Фиксированные версии Linux, Node.js, IMDG и т.д.
 * Операции: `IMap.get()` и `IMap.set()`
@@ -369,16 +381,11 @@ $ node --prof-process --preprocess -j isolate*.log | flamebearer
 
 # Хьюстон, у нас аллокации
 
-* `Buffer#alloc()/#allocUnsafe()` - дорогая операция
-* Во время сериализации библиотека несколько аллокаций, а затем буферы копируются в финальный
+* Для работы с бинарными данными, конечно, используется [Buffer](https://nodejs.org/api/buffer.html)
+* В на горячем пути много `Buffer#alloc()/#allocUnsafe()`, а это "дорогая" операция
+* Во время сериализации одной операции происходит несколько аллокаций, а затем буферы копируются в финальный
 * Это упрощает код, но производительность страдает
-* Полная правка требует много времени, поэтому делаем PoC с полумерой
-
----
-
-# Особенность `Buffer#allocUnsafe()`
-
-* TODO рассказать про встроенный пул
+* Сначала делаем PoC с полумерой, поскольку полная правка требует много времени
 
 ---
 
@@ -421,7 +428,31 @@ PoC | 104 854 | 24 929 | 109 | 95 165 | 52 809 | 1 581
 
 # Профилировщик, приди! (чтения 100 KB)
 
-TODO: вставить картинку с выноской
+<!-- TODO объяснить большое плато с BaseProxy.js -->
+
+![w:1080 center](./images/old-get-100KB-flamegraph.png)
+
+---
+
+# А что это у нас там?
+
+```javascript
+private readUTF(pos?: number): string {
+    const len = this.readInt(pos);
+    // ...
+    for (let i = 0; i < len; i++) {
+        let charCode: number;
+        leadingByte = this.readByte(readingIndex) & MASK_1BYTE;
+        readingIndex = this.addOrUndefined(readingIndex, 1);
+        const b = leadingByte & 0xFF;
+        switch (b >> 4) {
+            // ...
+        }
+        result += String.fromCharCode(charCode);
+    }
+    return result;
+}
+```
 
 ---
 
@@ -431,23 +462,28 @@ TODO: вставить картинку с выноской
 * Похоже на предварительную оптимизацию
 * Почему бы не сравнить со стандартным API?
 
----
-
-# Наша сериализация
-
-TODO: сниппет кода
-
----
-
-# Стандартная сериализация
-
-TODO: сниппет кода
+```javascript
+private readUTF(pos?: number): string {
+    const len = this.readInt(pos);
+    // ...
+    const result =
+      this.buffer.toString('utf8', this.pos, this.pos + len);
+    this.pos += len;
+    return result;
+}
+```
 
 ---
 
 # Микробенчмарк
 
-TODO: таблица с результатами
+&nbsp; | 100 B ASCII | 100 KB ASCII | 100 B UTF | 100 KB UTF
+------------:| ------------:| ------------:| ------------:| ------------:
+custom | 1 515 803 | 616 | 1 093 390 | 613
+standard | 11 297 821 | 68 721 | 1 311 610 | 794
+&nbsp; | **+645%** | **+11 056%** | **+20%** | **+29%**
+
+\* Результаты в ops/sec
 
 ---
 
@@ -467,19 +503,22 @@ TODO: таблица с результатами
 
 ```c++
 // v8:Factory#NewStringFromUtf8()
-MaybeHandle<String> Factory::NewStringFromUtf8(Vector<const char> string,
-                                               PretenureFlag pretenure) {
+MaybeHandle<String> Factory::NewStringFromUtf8(
+    Vector<const char> string,
+    PretenureFlag pretenure
+) {
   // Check for ASCII first since this is the common case.
   const char* ascii_data = string.start();
   int length = string.length();
   int non_ascii_start = String::NonAsciiStart(ascii_data, length);
   if (non_ascii_start >= length) {
-    // If the string is ASCII, we do not need to convert the characters
-    // since UTF8 is backwards compatible with ASCII.
-    return NewStringFromOneByte(Vector<const uint8_t>::cast(string), pretenure);
+    // If the string is ASCII, we do not need to convert
+    // the characters since UTF8 is backwards compatible with ASCII.
+    return
+      NewStringFromOneByte(
+        Vector<const uint8_t>::cast(string), pretenure);
   }
-  // ...
-}
+// ...
 ```
 
 ---
@@ -525,5 +564,19 @@ TODO: тут будет еще куча слайдов
 ---
 
 # Спасибо за внимание!
+
+---
+
+<!-- доп. материалы -->
+
+# Особенность `Buffer#allocUnsafe()`
+
+* TODO рассказать про встроенный пул
+
+---
+
+# Еще раз спасибо за внимание!
+
+---
 
 ## Время для Q&A
