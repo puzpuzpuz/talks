@@ -327,6 +327,9 @@ $ node --prof-process --preprocess -j isolate*.log | flamebearer
 
 # Пример простейшего flame graph
 
+<!-- TODO показать код этого микробенчмарка -->
+<!-- TODO перейти на 0x во всех -->
+
 ![w:960 center](./images/flame-graph-example.png)
 
 ---
