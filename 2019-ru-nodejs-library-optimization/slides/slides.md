@@ -20,6 +20,8 @@ table td {
 
 ---
 
+<!-- TODO подумать о clicker для слайдов с кодом -->
+
 <!-- paginate: true -->
 
 # О докладчике
@@ -195,10 +197,11 @@ run: function () {
 
 ```javascript
 const benchmark = new Benchmark({
-    nextOp: () => map.get('foo'),
-    totalOpsCount: REQ_COUNT,
-    batchSize: BATCH_SIZE
+    nextOp: () => map.get('foo'), // функция-фабрика для операций
+    totalOpsCount: REQ_COUNT,     // общее число операций
+    batchSize: BATCH_SIZE         // лимит на кол-во операций
 });
+
 await benchmark.run();
 ```
 
@@ -213,6 +216,8 @@ await benchmark.run();
 ---
 
 # Новый бенчмарк: визуализация
+
+<!-- TODO подумать о переходе на картинку -->
 
 Пример с `batchSize = 3` и `totalOpsCount = 7`:
 ```text
@@ -556,7 +561,7 @@ v3.12 | 132 855 | 120 670 | 8 756 | 127 291 | 94 625 | 10 617
 
 # Оптимизация Automated Pipelining
 
-* Подобная оптимизация использована в [классе WriteQueue](https://github.com/datastax/nodejs-driver/blob/master/lib/writers.js#L176) в Datastax's NodeJS driver for Apache Cassandra
+* Подобная оптимизация использована в [классе WriteQueue](https://github.com/datastax/nodejs-driver/blob/master/lib/writers.js#L176) в DataStax Node.js Driver for Apache Cassandra
 * Идея в объединении сообщений перед записью в сокет
 * В результате, делается меньше "дорогих" вызовов `Socket#write()`
 
@@ -588,13 +593,13 @@ pipelining.results();
 
 ---
 
-# Логика работы Automated Pipelining
+# Логика работы
 
 ![w:1080 center](./images/write-queue.png)
 
 ---
 
-# Особенности Automated Pipelining
+# Особенности
 
 * Для больших сообщений, записываемых в сокет, производительность может упасть
 * Поэтому добавлена настройка библиотеки, включающая "обычный" режим
@@ -605,7 +610,7 @@ pipelining.results();
 
 # Снова релиз?
 
-* Automated Pipelining пошла в ближайший релиз
+* Automated Pipelining вошла в ближайший релиз
 * Кроме этого, туда вошли минорные оптимизации для горячего пути:
   - Убрали мусор от `new Date().getTime()` (спасибо, `Date.now()`)
   - Убрали мусор от лишних конвертаций `number` <-> `Long` (используется [long.js](https://github.com/dcodeIO/long.js))
