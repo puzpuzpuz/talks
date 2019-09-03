@@ -325,12 +325,31 @@ $ node --prof-process --preprocess -j isolate*.log | flamebearer
 
 ---
 
-# Пример простейшего flame graph
+# Простой пример
 
-<!-- TODO показать код этого микробенчмарка -->
-<!-- TODO перейти на 0x во всех -->
+```javascript
+const Benchmark = require('benchmark');
+const suite = new Benchmark.Suite();
 
-![w:960 center](./images/flame-graph-example.png)
+suite
+  .add('awesome microbenchmark', () => fibonacci(1000))
+  .on('cycle', function (event) {
+    console.log(String(event.target))
+  })
+  .run();
+
+function fibonacci (n) {
+  // нерекурсивное вычисление n-го числа Фибоначчи
+}
+```
+
+---
+
+# Flame graph для простого примера
+
+<!-- TODO перейти на 0x во всех flame graph -->
+
+![w:1200 center](./images/flame-graph-example-0x.png)
 
 ---
 
