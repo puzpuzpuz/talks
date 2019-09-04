@@ -275,6 +275,21 @@ op3->  |op6-->    |op7->| finish
 
 ---
 
+# Не инструмент #1
+
+* Proof of concept (PoC)
+* Все средства хороши, но нужен весь функционал кода на горячем пути
+
+---
+
+# Не инструмент #2
+
+* Микробенчмарки позволяют быстро проверить гипотезу и/или обосновать результаты PoC
+* Использовался фреймворк [Benchmark.js](https://benchmarkjs.com/) (+ node-microtime)
+* *Предупреждение*: могут показывать температуру в Антарктиде
+
+---
+
 # Инструмент #1
 
 * Стандартный профилировщик Node.js
@@ -286,45 +301,6 @@ op3->  |op6-->    |op7->| finish
 
 ---
 
-# Пример вывода
-
-```
- [Summary]:
-   ticks  total  nonlib   name
-   4144   77.3%   78.0%  JavaScript
-   1157   21.6%   21.8%  C++
-    374    7.0%    7.0%  GC
-     51    1.0%          Shared libraries
-     11    0.2%          Unaccounted
-
- [JavaScript]:
-   ticks  total  nonlib   name
-   2104   39.2%   39.6%  Builtin: StringAdd_CheckNone_NotTenured
-   1312   24.5%   24.7%  LazyCompile: *<anonymous> :1:20
-    484    9.0%    9.1%  LazyCompile: *suite.add ./app.js:68:7
-    ...
-      8    0.1%    0.2%  LazyCompile: ~<anonymous> ./util.js:51:44
- ...
-```
-
----
-
-# Инструмент #2
-
-* Визуализация профиля в виде flame graph
-* Действительно помогает обнаруживать ботлнеки
-* Отлично работает для event loop'а Node.js
-* Спасибо Brendan Gregg, Netflix, [придумавшему подход](https://www.usenix.org/conference/lisa13/technical-sessions/plenary/gregg) в 2013
-* Наиболее популярный инструмент - [0x](https://github.com/davidmarkclements/0x) (V8, perf, DTrace)
-* Мы использовали [flamebearer](https://github.com/mapbox/flamebearer) (V8)
-
-```bash
-$ npm install -g flamebearer
-$ node --prof-process --preprocess -j isolate*.log | flamebearer
-```
-
----
-
 # Простой пример
 
 ```javascript
@@ -332,30 +308,66 @@ const Benchmark = require('benchmark');
 const suite = new Benchmark.Suite();
 
 suite
-  .add('awesome microbenchmark', () => fibonacci(1000))
+  .add('awesome microbenchmark', () => cpuIntensiveFn(...))
   .on('cycle', function (event) {
     console.log(String(event.target))
   })
   .run();
 
-function fibonacci (n) {
-  // нерекурсивное вычисление n-го числа Фибоначчи
+function cpuIntensiveFn (...) {
+  // какие-то тяжелые вычисления
 }
+```
+
+---
+
+# Пример вывода
+
+```
+ [JavaScript]:
+   ticks  total  nonlib   name
+   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
+   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
+     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
+     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+...
+ [Summary]:
+   ticks  total  nonlib   name
+   4577   90.0%   90.5%  JavaScript
+    475    9.3%    9.4%  C++
+     15    0.3%    0.3%  GC
+     29    0.6%          Shared libraries
+      5    0.1%          Unaccounted
+...
+```
+
+---
+
+# Инструмент #2
+
+* Визуализация профиля в виде flame graph
+* Отлично работает для event loop'а Node.js
+* Действительно помогает обнаруживать узкие места
+* Спасибо Brendan Gregg, Netflix, [придумавшему подход](https://www.usenix.org/conference/lisa13/technical-sessions/plenary/gregg) в 2013
+* Наиболее популярный инструмент - [0x](https://github.com/davidmarkclements/0x) (умеет V8, perf, DTrace)
+
+```bash
+$ npm install -g 0x
+$ 0x -o app.js
 ```
 
 ---
 
 # Flame graph для простого примера
 
-<!-- TODO перейти на 0x во всех flame graph -->
-
-![w:1200 center](./images/flame-graph-example-0x.png)
+![w:1200 center](./images/flame-graph-example.png)
 
 ---
 
 # Пример flame graph из реального мира
 
-![w:1020 center](./images/flame-graph-complex-example.png)
+![w:1200 center](./images/flame-graph-complex-example.png)
 
 ---
 
@@ -367,22 +379,6 @@ function fibonacci (n) {
 <br/>
 
 ![w:740 center drop-shadow](./images/chrome-devtools-example.png)
-
----
-
-# Инструмент #4
-
-* Микробенчмарки для быстрой проверки гипотез
-* Использовался фреймворк [Benchmark.js](https://benchmarkjs.com/) (+ node-microtime)
-* *Предупреждение*: могут показывать температуру в Антарктиде
-
----
-
-# Инструмент #5
-
-* Proof of concept (PoC)
-* Все средства хороши, но нужен весь функционал кода на горячем пути
-* *Замечание*: это не совсем инструмент, но не упомянуть нельзя
 
 ---
 
@@ -418,6 +414,8 @@ function fibonacci (n) {
 ------------:| ------------:| ------------:| ------------:| ------------:| ------------:| ------------:
 v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
+###### \* Абсолютные значения не важны (замеры сделаны на моем ноутбуке)
+
 ---
 
 # Видны проблемы?
@@ -430,7 +428,21 @@ v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
 # Профилировщик, приди! (запись 3 B)
 
-![w:1080 center](./images/old-set-3B-flamegraph.png)
+![w:1200 center](./images/old-set-3B-flamegraph.png)
+
+---
+
+# Профилировщик, приди! (запись 3 B)
+
+```
+...
+ [C++ entry points]:
+   ticks    cpp   total   name
+   2775   37.8%   21.8%  v8::internal::Builtin_ArrayBufferConstructor(...)
+    991   13.5%    7.8%  __libc_write
+    329    4.5%    2.6%  v8::internal::Builtin_ArrayConcat(...)
+...
+```
 
 ---
 
@@ -483,9 +495,7 @@ PoC | 104 854 | 24 929 | 109 | 95 165 | 52 809 | 1 581
 
 # Профилировщик, приди! (чтения 100 KB)
 
-<!-- TODO объяснить большое плато с BaseProxy.js -->
-
-![w:1080 center](./images/old-get-100KB-flamegraph.png)
+![w:1200 center](./images/old-get-100KB-flamegraph.png)
 
 ---
 
@@ -534,7 +544,7 @@ custom | 1 515 803 | 616 | 1 093 390 | 613
 standard | 11 297 821 | 68 721 | 1 311 610 | 794
 &nbsp; | **+645%** | **+11 056%** | **+20%** | **+29%**
 
-\* Результаты для десериализации в ops/sec
+###### \* Результаты для десериализации в ops/sec
 
 ---
 
@@ -677,7 +687,7 @@ v3.12 | 132 855 | 120 670 | 8 756 | 127 291 | 94 625 | 10 617
 v3.12.1 | 173 611 | 161 812 | 10 879 | 172 028 | 82 747 | 8 208
 &nbsp; | **+30%** | **+34%** | **+24%** | **+35%** | **-13%** | **-23%**
 
-\* Замеры с включенным Automated Pipelining
+###### \* Замеры с включенным Automated Pipelining
 
 ---
 
@@ -697,7 +707,7 @@ v3.12.1 | 173 611 | 161 812 | 10 879 | 172 028 | 82 747 | 8 208
 PoC | 222 172 | 192 122 | 12 594 | 205 254 | 109 051 | 11 630
 &nbsp; | **+28%** | **+19%** | **+16%** | **+19%** | **+32%** | **+42%**
 
-\* Замеры с включенным Automated Pipelining
+###### \* Замеры с включенным Automated Pipelining
 
 ---
 
@@ -709,7 +719,7 @@ v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 PoC | 222 172 | 192 122 | 12 594 | 205 254 | 109 051 | 11 630
 &nbsp; | **+144%** | **+714%** | **+11&nbsp;894%** | **+170%** | **+146%** | **+646%**
 
-\* Замеры с включенным Automated Pipelining
+###### \* Замеры с включенным Automated Pipelining
 
 ---
 
