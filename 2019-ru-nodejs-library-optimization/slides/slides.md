@@ -244,21 +244,7 @@ await benchmark.run();
 
 # Новый бенчмарк: визуализация
 
-<!-- TODO подумать о переходе на картинку -->
-
-Пример с `batchSize = 3` и `totalOpsCount = 7`:
-```text
-op1--->|op6--->| finish
-op2->|op4------>| finish
-op3->|op5-->|op7->| finish
-```
-
-Простой `Promise.all()`:
-```text
-op1--->|op4--->   |       finish
-op2->  |op5------>|       finish
-op3->  |op6-->    |op7->| finish
-```
+![h:580 center](./images/benchmark-logic.png)
 
 ---
 
@@ -361,6 +347,8 @@ $ 0x -o app.js
 
 # Flame graph для простого примера
 
+<!-- TODO здесь будет демо -->
+
 ![w:1200 center](./images/flame-graph-example.png)
 
 ---
@@ -402,9 +390,9 @@ $ 0x -o app.js
 1. Старт операции (создание `Promise`)
 2. Сериализация сообщения в бинарный формат
 3. Отправка в сеть в `socket.write(...)`
-5. Чтение фрейма в `socket.on('data', ...)`
-6. Десериализация ответного сообщения
-7. Вызов `resolve()` у `Promise`'а операции
+4. Чтение фрейма в `socket.on('data', ...)`
+5. Десериализация ответного сообщения
+6. Вызов `resolve()` у `Promise`'а операции
 
 ---
 
@@ -655,7 +643,7 @@ pipelining.results();
 
 # Логика работы
 
-![w:1080 center](./images/write-queue.png)
+![w:1000 center](./images/write-queue.png)
 
 ---
 
