@@ -643,7 +643,7 @@ pipelining.results();
 
 # Логика работы
 
-![w:1000 center](./images/write-queue.png)
+![w:1100 center](./images/write-queue.png)
 
 ---
 
@@ -769,12 +769,8 @@ PoC | 222 172 | 192 122 | 12 594 | 205 254 | 109 051 | 11 630
 
 ---
 
-# Слайды
-
-![w:600 center](./images/slides-qr-code.png)
-
----
-
 # Спасибо за внимание!
 
 ## Время для Q&A
+
+![w:480 center](./images/slides-qr-code.png)
