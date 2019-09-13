@@ -345,11 +345,9 @@ $ 0x -o app.js
 
 ---
 
-# Flame graph для простого примера
+# It's flame graph demo time!
 
-<!-- TODO здесь будет демо -->
-
-![w:1200 center](./images/flame-graph-example.png)
+![h:500 center](./images/demo.png)
 
 ---
 
