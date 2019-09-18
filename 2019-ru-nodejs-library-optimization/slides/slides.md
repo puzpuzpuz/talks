@@ -41,9 +41,6 @@ table td {
 
 ---
 
-<!-- TODO подумать о clicker для слайдов с кодом -->
-<!-- можно ковертировать все блоки кода в картинки через https://carbon.now.sh и сделать подсветку -->
-
 <!-- paginate: true -->
 
 # О докладчике
@@ -212,6 +209,66 @@ run: function () {
 
 ---
 
+# Старый бенчмарк
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 175px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 275px;
+  left: 90px;
+}
+</style>
+
+```javascript
+// ...
+run: function () {
+  var key = Math.random() * ENTRY_COUNT;
+  var opType = Math.floor(Math.random() * 100);
+  if (opType < GET_PERCENTAGE) {
+      this.map.get(key).then(this.increment.bind(this));
+  }
+  // ...
+  setImmediate(this.run.bind(this));
+}
+// ...
+```
+
+---
+
+# Старый бенчмарк
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 30px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 488px;
+  left: 90px;
+}
+</style>
+
+```javascript
+// ...
+run: function () {
+  var key = Math.random() * ENTRY_COUNT;
+  var opType = Math.floor(Math.random() * 100);
+  if (opType < GET_PERCENTAGE) {
+      this.map.get(key).then(this.increment.bind(this));
+  }
+  // ...
+  setImmediate(this.run.bind(this));
+}
+// ...
+```
+
+---
+
 # Старый бенчмарк: минусы
 
 * Все операции стартуют через рекурсивный `setImmediate()`
@@ -289,6 +346,76 @@ await benchmark.run();
 ---
 
 # Пример человекочитаемого представления
+
+```
+ [JavaScript]:
+   ticks  total  nonlib   name
+   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
+   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
+     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
+     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+...
+ [Summary]:
+   ticks  total  nonlib   name
+   4577   90.0%   90.5%  JavaScript
+    475    9.3%    9.4%  C++
+     15    0.3%    0.3%  GC
+     29    0.6%          Shared libraries
+      5    0.1%          Unaccounted
+...
+```
+
+---
+
+# Пример человекочитаемого представления
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 30px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 215px;
+  left: 90px;
+}
+</style>
+
+```
+ [JavaScript]:
+   ticks  total  nonlib   name
+   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
+   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
+     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
+     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+...
+ [Summary]:
+   ticks  total  nonlib   name
+   4577   90.0%   90.5%  JavaScript
+    475    9.3%    9.4%  C++
+     15    0.3%    0.3%  GC
+     29    0.6%          Shared libraries
+      5    0.1%          Unaccounted
+...
+```
+
+---
+
+# Пример человекочитаемого представления
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 225px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 397px;
+  left: 90px;
+}
+</style>
 
 ```
  [JavaScript]:
@@ -425,6 +552,18 @@ v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
 # PoC с полумерой
 
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 110px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 415px;
+  left: 90px;
+}
+</style>
+
 ```javascript
 export class ObjectDataOutput implements DataOutput {
 
@@ -488,6 +627,74 @@ private readUTF(pos?: number): string {
 
 ---
 
+# А что это у нас там?
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 245px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 275px;
+  left: 90px;
+}
+</style>
+
+```javascript
+private readUTF(pos?: number): string {
+    const len = this.readInt(pos);
+    // ...
+    for (let i = 0; i < len; i++) {
+        let charCode: number;
+        leadingByte = this.readByte(readingIndex) & MASK_1BYTE;
+        readingIndex = this.addOrUndefined(readingIndex, 1);
+        const b = leadingByte & 0xFF;
+        switch (b >> 4) {
+            // ...
+        }
+        result += String.fromCharCode(charCode);
+    }
+    return result;
+}
+```
+
+---
+
+# А что это у нас там?
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 30px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 522px;
+  left: 90px;
+}
+</style>
+
+```javascript
+private readUTF(pos?: number): string {
+    const len = this.readInt(pos);
+    // ...
+    for (let i = 0; i < len; i++) {
+        let charCode: number;
+        leadingByte = this.readByte(readingIndex) & MASK_1BYTE;
+        readingIndex = this.addOrUndefined(readingIndex, 1);
+        const b = leadingByte & 0xFF;
+        switch (b >> 4) {
+            // ...
+        }
+        result += String.fromCharCode(charCode);
+    }
+    return result;
+}
+```
+
+---
+
 # Предварительная оптимизация?
 
 * Итак, у нас нестандартная (де)сериализация UTF-8 строк
@@ -528,6 +735,78 @@ standard | 11 297 821 | 68 721 | 1 311 610 | 794
 ---
 
 # Что там, в норе?
+
+```c++
+// v8:Factory#NewStringFromUtf8()
+MaybeHandle<String> Factory::NewStringFromUtf8(
+    Vector<const char> string,
+    PretenureFlag pretenure
+) {
+  // Check for ASCII first since this is the common case.
+  const char* ascii_data = string.start();
+  int length = string.length();
+  int non_ascii_start = String::NonAsciiStart(ascii_data, length);
+  if (non_ascii_start >= length) {
+    // If the string is ASCII, we do not need to convert
+    // the characters since UTF8 is backwards compatible with ASCII.
+    return
+      NewStringFromOneByte(
+        Vector<const uint8_t>::cast(string), pretenure);
+  }
+// ...
+```
+
+---
+
+# Что там, в норе?
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 30px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 382px;
+  left: 90px;
+}
+</style>
+
+```c++
+// v8:Factory#NewStringFromUtf8()
+MaybeHandle<String> Factory::NewStringFromUtf8(
+    Vector<const char> string,
+    PretenureFlag pretenure
+) {
+  // Check for ASCII first since this is the common case.
+  const char* ascii_data = string.start();
+  int length = string.length();
+  int non_ascii_start = String::NonAsciiStart(ascii_data, length);
+  if (non_ascii_start >= length) {
+    // If the string is ASCII, we do not need to convert
+    // the characters since UTF8 is backwards compatible with ASCII.
+    return
+      NewStringFromOneByte(
+        Vector<const uint8_t>::cast(string), pretenure);
+  }
+// ...
+```
+
+---
+
+# Что там, в норе?
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 155px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #b0b0a9;
+  position: absolute;
+  top: 445px;
+  left: 90px;
+}
+</style>
 
 ```c++
 // v8:Factory#NewStringFromUtf8()
