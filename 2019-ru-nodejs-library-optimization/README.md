@@ -1,6 +1,6 @@
 # Instructions
 
-Slides are built with [marp](https://yhatt.github.io/marp/). To update them run the following command:
+Slides are built with [marp](https://yhatt.github.io/marp/). To update them run the following commands:
 
 ```
 $ cd slides/
