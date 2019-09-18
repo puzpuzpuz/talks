@@ -42,6 +42,7 @@ table td {
 ---
 
 <!-- TODO подумать о clicker для слайдов с кодом -->
+<!-- можно ковертировать все блоки кода в картинки через https://carbon.now.sh и сделать подсветку -->
 
 <!-- paginate: true -->
 
@@ -287,27 +288,7 @@ await benchmark.run();
 
 ---
 
-# Простой пример
-
-```javascript
-const Benchmark = require('benchmark');
-const suite = new Benchmark.Suite();
-
-suite
-  .add('awesome microbenchmark', () => cpuIntensiveFn(...))
-  .on('cycle', function (event) {
-    console.log(String(event.target))
-  })
-  .run();
-
-function cpuIntensiveFn (...) {
-  // какие-то тяжелые вычисления
-}
-```
-
----
-
-# Пример вывода
+# Пример человекочитаемого представления
 
 ```
  [JavaScript]:
