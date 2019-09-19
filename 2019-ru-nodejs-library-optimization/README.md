@@ -4,5 +4,5 @@ Slides are built with [marp](https://yhatt.github.io/marp/). To update them run 
 
 ```
 $ cd slides/
-$ npx @marp-team/marp-cli slides.md --pdf --allow-local-files
+$ npx @marp-team/marp-cli@v0.12.1 slides.md --pdf --allow-local-files
 ```

@@ -350,18 +350,18 @@ await benchmark.run();
 ```
  [JavaScript]:
    ticks  total  nonlib   name
-   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
-   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
-     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
-     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
+     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
+     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
 ...
  [Summary]:
    ticks  total  nonlib   name
-   4577   90.0%   90.5%  JavaScript
-    475    9.3%    9.4%  C++
-     15    0.3%    0.3%  GC
-     29    0.6%          Shared libraries
+   4568   89.8%   90.2%  JavaScript
+    493    9.7%    9.7%  C++
+     17    0.3%    0.3%  GC
+     23    0.5%          Shared libraries
       5    0.1%          Unaccounted
 ...
 ```
@@ -385,18 +385,18 @@ section::before {
 ```
  [JavaScript]:
    ticks  total  nonlib   name
-   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
-   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
-     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
-     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
+     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
+     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
 ...
  [Summary]:
    ticks  total  nonlib   name
-   4577   90.0%   90.5%  JavaScript
-    475    9.3%    9.4%  C++
-     15    0.3%    0.3%  GC
-     29    0.6%          Shared libraries
+   4568   89.8%   90.2%  JavaScript
+    493    9.7%    9.7%  C++
+     17    0.3%    0.3%  GC
+     23    0.5%          Shared libraries
       5    0.1%          Unaccounted
 ...
 ```
@@ -420,18 +420,18 @@ section::before {
 ```
  [JavaScript]:
    ticks  total  nonlib   name
-   2806   55.2%   55.5%  LazyCompile: *suite.add /home/puzpuzpuz/app.js:5:34
-   1631   32.1%   32.3%  LazyCompile: *<anonymous> :1:20
-     35    0.7%    0.7%  Eval: ~<anonymous> :1:20
-     12    0.2%    0.2%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
+   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
+     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
+     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
+      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
 ...
  [Summary]:
    ticks  total  nonlib   name
-   4577   90.0%   90.5%  JavaScript
-    475    9.3%    9.4%  C++
-     15    0.3%    0.3%  GC
-     29    0.6%          Shared libraries
+   4568   89.8%   90.2%  JavaScript
+    493    9.7%    9.7%  C++
+     17    0.3%    0.3%  GC
+     23    0.5%          Shared libraries
       5    0.1%          Unaccounted
 ...
 ```
