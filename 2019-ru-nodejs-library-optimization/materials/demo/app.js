@@ -2,13 +2,17 @@ const Benchmark = require('benchmark');
 const suite = new Benchmark.Suite();
 
 suite
-  .add('my awesome microbenchmark', () => cpuIntensiveFn(1000))
+  .add('my awesome microbenchmark', cpuIntensiveFn)
   .on('cycle', function (event) {
     console.log(String(event.target))
   })
   .run();
 
-function cpuIntensiveFn (n) {
+function cpuIntensiveFn () {
+  return fibonacci(1000);
+}
+
+function fibonacci (n) {
   let a = 1, b = 0, tmp;
   while (n >= 0) {
     tmp = a;
