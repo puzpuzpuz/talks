@@ -162,16 +162,10 @@ console.log(cached); // bar
 
 ---
 
-# Выбор метрик?
+# Выбор метрик
 
 * Оптимизируем throughput
 * Желаемые значения: ¯\\_(ツ)_/¯
-
----
-
-# Выбор метрик!
-
-![w:800 center drop-shadow](./images/gotta-go-fast.jpg)
 
 ---
 
