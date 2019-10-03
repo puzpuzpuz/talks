@@ -127,7 +127,7 @@ console.log(cached); // bar
 * Анализ текущей производительности перед стабильным релизом
 * Включение в релиз "быстрых" правок (при необходимости)
 * Постановка планов по дальнейшему анализу и оптимизации
-* *Спойлер*: на сегодня большая часть из этих планов уже реализована
+* *Спойлер*: о текущих планах мы поговорим позже
 
 ---
 
@@ -169,7 +169,7 @@ console.log(cached); // bar
 
 ---
 
-# Наш подход к оптимизации:<br/>бенчмарки, типы экспериментов и инструменты анализа
+# Наш подход к оптимизации:<br/>бенчмарки, виды экспериментов и инструменты анализа
 
 --- 
 
@@ -178,8 +178,8 @@ console.log(cached); // bar
 ```javascript
 const benchmark = new Benchmark({
     nextOp: () => map.get('foo'), // функция-фабрика для операций
-    totalOpsCount: REQ_COUNT,     // общее число операций
-    batchSize: BATCH_SIZE         // лимит на кол-во операций
+    totalOpsCount: REQ_COUNT,     // общее число операций, 1 млн
+    batchSize: BATCH_SIZE         // лимит на кол-во операций, 100
 });
 
 await benchmark.run();
@@ -194,7 +194,7 @@ await benchmark.run();
 * Локальная машина (loopback address)
 * Фиксированные версии Linux, Node.js, IMDG и т.д.
 * Операции: `Map#get()` и `Map#set()`
-* Данные: фиксированные строки с ASCII-символами (3 B, 1 KB, 100 KB)
+* Данные: строки с ASCII-символами (3 B, 1 KB, 100 KB)
 * Замер: несколько запусков и вычисление среднего результата
 * Каждый запуск: 1 млн операций с лимитом 100
 
@@ -211,14 +211,14 @@ await benchmark.run();
 
 ---
 
-# Тип эксперимента #1
+# Вид эксперимента #1
 
 * Proof of concept (PoC)
 * Все средства хороши, но нужен весь функционал кода на горячем пути
 
 ---
 
-# Тип эксперимента #2
+# Вид эксперимента #2
 
 * Микробенчмарки позволяют быстро проверить гипотезу и/или обосновать результаты PoC
 * *Предупреждение*: могут показывать температуру в Антарктиде
@@ -237,104 +237,10 @@ await benchmark.run();
 
 ---
 
-# Пример человекочитаемого представления
-
-```
- [JavaScript]:
-   ticks  total  nonlib   name
-   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
-   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
-     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
-     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
-...
- [Summary]:
-   ticks  total  nonlib   name
-   4568   89.8%   90.2%  JavaScript
-    493    9.7%    9.7%  C++
-     17    0.3%    0.3%  GC
-     23    0.5%          Shared libraries
-      5    0.1%          Unaccounted
-...
-```
-
----
-
-# Пример человекочитаемого представления
-
-<style scoped>
-section::before {
-  width: 1100px;
-  height: 30px;
-  background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
-  position: absolute;
-  top: 215px;
-  left: 90px;
-}
-</style>
-
-```
- [JavaScript]:
-   ticks  total  nonlib   name
-   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
-   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
-     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
-     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
-...
- [Summary]:
-   ticks  total  nonlib   name
-   4568   89.8%   90.2%  JavaScript
-    493    9.7%    9.7%  C++
-     17    0.3%    0.3%  GC
-     23    0.5%          Shared libraries
-      5    0.1%          Unaccounted
-...
-```
-
----
-
-# Пример человекочитаемого представления
-
-<style scoped>
-section::before {
-  width: 1100px;
-  height: 225px;
-  background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
-  position: absolute;
-  top: 397px;
-  left: 90px;
-}
-</style>
-
-```
- [JavaScript]:
-   ticks  total  nonlib   name
-   2702   53.1%   53.3%  LazyCompile: *cpuIntensiveFn /home/puzpuzpuz/app.js:11:25
-   1728   34.0%   34.1%  LazyCompile: *<anonymous> :1:20
-     29    0.6%    0.6%  Eval: ~<anonymous> :1:20
-     15    0.3%    0.3%  Builtin: InterpreterEntryTrampoline
-      9    0.2%    0.2%  LazyCompile: *fibonacci /home/puzpuzpuz/app.js:15:20
-...
- [Summary]:
-   ticks  total  nonlib   name
-   4568   89.8%   90.2%  JavaScript
-    493    9.7%    9.7%  C++
-     17    0.3%    0.3%  GC
-     23    0.5%          Shared libraries
-      5    0.1%          Unaccounted
-...
-```
-
----
-
 # Инструмент #2
 
-* Визуализация профиля в виде flame graph
-* Отлично работает для event loop'а Node.js
-* Действительно помогает обнаруживать узкие места
+* Визуализация отчета профилировщика в виде flame graph
+* Отлично работает для event loop'а Node.js и помогает обнаруживать узкие места
 * Спасибо Brendan Gregg, Netflix, [придумавшему подход](https://www.usenix.org/conference/lisa13/technical-sessions/plenary/gregg) в 2013
 * Мы использовали популярный инструмент - [0x](https://github.com/davidmarkclements/0x) (умеет V8, perf, DTrace)
 
@@ -379,7 +285,7 @@ $ 0x -o app.js
 
 ---
 
-# История наших оптимизаций: замеры, гипотезы, эксперименты
+# История наших оптимизаций:<br/>замеры, гипотезы, эксперименты
 
 ---
 
@@ -395,7 +301,7 @@ $ 0x -o app.js
 ------------:| ------------:| ------------:| ------------:| ------------:| ------------:| ------------:
 v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
-###### \* Абсолютные значения не важны (замеры сделаны на моем ноутбуке)
+###### \* Абсолютные значения не важны (все замеры сделаны на моем ноутбуке)
 
 ---
 
@@ -409,7 +315,7 @@ v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
 # Пора анализировать?
 
-* Сначала профилируем сценарий записи в сеть (`Map#set()`) и видим...
+* Сначала профилируем сценарий "тяжелой" записи (`Map#set()`) и видим...
 
 ---
 
@@ -461,7 +367,7 @@ section::before {
 export class ObjectDataOutput implements DataOutput {
 
     protected buffer: Buffer;
-    private pos: number;
+    // ...
 
     constructor() {
         // пробуем аллоцировать жадно
@@ -494,7 +400,7 @@ PoC | 104 854 | 24 929 | 109 | 95 165 | 52 809 | 1 581
 
 # Снова пора анализировать?
 
-* Теперь профилируем сценарий чтения из сеть (`Map#get()`) и видим...
+* Теперь профилируем сценарий "тяжелого" чтения (`Map#get()`) и видим...
 
 ---
 
