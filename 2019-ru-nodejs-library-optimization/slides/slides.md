@@ -74,17 +74,34 @@ table td {
 
 # Hazelcast IMDG
 
-* https://hazelcast.org/
+<style scoped>
+section {
+  background: #fff url(images/hazelcast-logo.png) no-repeat 950px 80px;
+  background-size: 200px;
+}
+</style>
+
+* https://hazelcast.org
 * Hazelcast In-Memory Data Grid (IMDG)
-* Большой набор распределенных структур данных<br/> (AP и CP согласно CAP теореме)
+* Большой набор распределенных структур данных
 * Показательный пример - `Map`, который часто используют как кэш
 * Написана на Java, умеет embedded и standalone режимы
 * Хорошо масштабируется вертикально и горизонтально
 * Часто используется в high-load и low-latency приложениях
+* Некоторые области применения: IoT, in-memory stream processing, payment processing, fraud detection
 
 ---
 
+<br/><br/>
+
 # Hazelcast IMDG Node.js client
+
+<style scoped>
+section {
+  background: #fff url(images/hazelcast-plus-node.jpg) no-repeat center 50px;
+  background-size: 500px;
+}
+</style>
 
 * https://github.com/hazelcast/hazelcast-nodejs-client
 * Node.js 4+
@@ -163,6 +180,13 @@ console.log(cached); // bar
 ---
 
 # Выбор метрик
+
+<style scoped>
+section {
+  background: #fff url(images/gotta-go-fast.jpg) no-repeat 650px center;
+  background-size: 550px;
+}
+</style>
 
 * Оптимизируем throughput
 * Желаемые значения: ¯\\_(ツ)_/¯
@@ -313,7 +337,7 @@ v0.10.0 | 90 933 | 23 591 | 105 | 76 011 | 44 324 | 1 558
 
 ---
 
-# Пора анализировать?
+# Пора анализировать
 
 * Сначала профилируем сценарий "тяжелой" записи (`Map#set()`) и видим...
 
@@ -356,7 +380,7 @@ section::before {
   width: 1100px;
   height: 110px;
   background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
+  border: 1px solid #73736e;
   position: absolute;
   top: 415px;
   left: 90px;
@@ -398,7 +422,7 @@ PoC | 104 854 | 24 929 | 109 | 95 165 | 52 809 | 1 581
 
 ---
 
-# Снова пора анализировать?
+# Снова пора анализировать
 
 * Теперь профилируем сценарий "тяжелого" чтения (`Map#get()`) и видим...
 
@@ -439,7 +463,7 @@ section::before {
   width: 1100px;
   height: 245px;
   background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
+  border: 1px solid #73736e;
   position: absolute;
   top: 275px;
   left: 90px;
@@ -473,9 +497,9 @@ section::before {
   width: 1100px;
   height: 30px;
   background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
+  border: 1px solid #73736e;
   position: absolute;
-  top: 522px;
+  top: 524px;
   left: 90px;
 }
 </style>
@@ -572,7 +596,7 @@ section::before {
   width: 1100px;
   height: 30px;
   background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
+  border: 1px solid #73736e;
   position: absolute;
   top: 382px;
   left: 90px;
@@ -608,7 +632,7 @@ section::before {
   width: 1100px;
   height: 155px;
   background-color: rgba(235, 225, 52, 0.1);
-  border: 1px solid #b0b0a9;
+  border: 1px solid #73736e;
   position: absolute;
   top: 445px;
   left: 90px;
