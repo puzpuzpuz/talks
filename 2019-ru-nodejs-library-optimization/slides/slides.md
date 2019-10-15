@@ -86,14 +86,7 @@ section h1 {
 
 ---
 
-# Hazelcast IMDG
-
-<style scoped>
-section {
-  background: #fff url(images/hazelcast-logo.png) no-repeat 1050px 80px;
-  background-size: 150px;
-}
-</style>
+![h:80](./images/imdg-logo.jpg)
 
 * https://hazelcast.org
 * Hazelcast In-Memory Data Grid (IMDG)
@@ -926,7 +919,7 @@ pipelining.results();
 
 # Логика работы
 
-![w:1100 center](./images/write-queue.png)
+![w:1050 center](./images/write-queue.png)
 
 ---
 
