@@ -871,6 +871,16 @@ section h1 {
 
 ---
 
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
 # Bonus unlocked 🏅🏅🏅
 
 ---
