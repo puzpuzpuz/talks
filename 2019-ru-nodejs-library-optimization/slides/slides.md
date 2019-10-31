@@ -866,9 +866,10 @@ section h1 {
 * https://hazelcast.org
 * https://github.com/hazelcast/hazelcast-nodejs-client
 * https://nodejs.org/en/docs/guides/simple-profiling
+* https://youtu.be/D53T1Ejig1Q (доклад про flame graph)
+* https://www.ibm.com/developerworks/library/j-benchmark2/index.html
 * https://nodejs.org/en/docs/guides/dont-block-the-event-loop
 * https://blog.insiderattack.net/event-loop-and-the-big-picture-nodejs-event-loop-part-1-1cb67a182810
-* https://www.ibm.com/developerworks/library/j-benchmark2/index.html
 
 ---
 
