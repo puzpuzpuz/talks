@@ -188,20 +188,6 @@ section {
 
 ---
 
-<style scoped>
-section h1 {
-  position: absolute;
-  top: 261px;
-  left: 90px;
-}
-</style>
-
-![bg](./images/hazelcast-bg-no-logo.jpg)
-
-# Наш подход к оптимизации:<br/>бенчмарки, виды экспериментов<br/>и инструменты анализа
-
---- 
-
 # Бенчмарк
 
 ```javascript
@@ -326,7 +312,7 @@ section h1 {
 
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
-# История наших оптимизаций:<br/>гипотезы, эксперименты, замеры
+# История наших оптимизаций
 
 ---
 
