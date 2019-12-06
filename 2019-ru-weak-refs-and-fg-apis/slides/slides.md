@@ -5,7 +5,7 @@ theme: default
 
 <style>
 section.lead h1 {
-  padding-top: 69px;
+  padding-top: 12px;
 }
 
 section.lead h1, section.lead h2 {
@@ -82,7 +82,74 @@ section h1 {
 
 ---
 
-TODO
+# Чисто там, где не мусорят
+
+* Первый garbage collector - Lisp, 1959 (лень-матушка)
+* Задачи любого GC:
+  - Отследить объекты, более недоступные в программе
+  - Освободить память в куче под новые объекты
+  - Дефрагментировать память (опционально)
+
+---
+
+# Особенности GC
+
+* GC не подразумевает VM, но часто идет в связке
+* GC отличаются стратегиями:
+  - Tracing (самая популярная)
+  - Reference counting
+  - Escape analysis (compile-time, стоит особняком)
+* Разновидностей конкретных алгоритмов GC - весьма много
+* Кроме GC есть такие сompile-time штуки, как automatic reference counter (ARC)
+
+---
+
+# Что у нас в JS? (V8)
+
+* Конечно, tracing стратегия
+* Комбинирует различные подходы к сборке мусора, чтобы минимизировать stop-the-world паузы
+* Кому интересны подробности: https://v8.dev/blog/trash-talk
+
+---
+
+# Ссылка есть? А если найду?
+
+* GC оперирует обычными ссылками (strong reference)
+* Конечно же, GC учитывает графы зависимостей (и не боится циклов в них)
+
+```javascript
+let baz = { answer: 42 };
+const foo = { bar: baz };
+
+baz = null;
+// a few moments later...
+// baz жил, baz жив, baz будет жить
+console.log('baz: ', foo.bar);
+```
+
+---
+
+# Но что если хочется "необычных" ссылок?
+
+![w:900 center](./images/50-shades-of-refs.jpg)
+
+---
+
+# Ссылка есть? А куда дел?
+
+* Во многих языках есть другие виды ссылок
+* Например, слабые ссылки (weak reference)
+* *Оффтопик*. В ARC слабые ссылки особенно важны
+
+```javascript
+let baz = { answer: 42 };
+const foo = { bar: new WeakRef(baz) };
+
+baz = null;
+// a few moments later...
+// baz приказал долго жить
+console.log('baz: ', foo.bar.deref());
+```
 
 ---
 
@@ -100,7 +167,46 @@ section h1 {
 
 ---
 
+# WeakRef
+
+```javascript
+// поддерживает только объектные типы
+const validRef = new WeakRef({foo: 'bar'});
+//const invalidRef = new WeakRef(1); // TypeError
+
+// имеет ровно один метод
+const fooBar = validRef.deref();
+// в fooBar будет или наш объект, или undefined
+if (fooBar !== undefined) {
+  console.log('жив курилка!');
+}
+```
+
+---
+
+# WeakRef + WeakMap/WeakSet
+
+* API WeakMap/WeakSet не связаны с WeakRef
+* Конечно, WeakRef не препятствует очистке элементов в WeakMap/WeakSet
+* Map + WeakRef !== WeakMap (проблема в ссылках из значений на ключи)
+* WeakMap основан на [ephemeron](http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf), а не на "классических" слабых ссылках
+
+---
+
+# FinalizationGroup
+
 TODO
+
+https://github.com/tc39/proposal-weakrefs#another-note-of-caution
+https://github.com/tc39/proposal-weakrefs#scheduling-of-finalizers-and-consistency-of-multiple-deref-calls
+
+---
+
+# Когда ждать?
+
+* Сейчас спецификация на stage 3 в TC39 (предпоследний шаг)
+* https://github.com/tc39/proposal-weakrefs
+* Можно щупать в Node.js v12+ (и V8) с флагом `--harmony-weak-refs`
 
 ---
 
