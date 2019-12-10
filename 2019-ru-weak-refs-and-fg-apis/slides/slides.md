@@ -1,5 +1,5 @@
 ---
-marp: false
+marp: true
 theme: default
 ---
 
@@ -153,7 +153,7 @@ console.log('baz: ', foo.bar.deref());
 
 ---
 
-# История появления weak reference
+# Gotta catch 'em all
 
 * Диалекты Lisp
 * Haskell
@@ -201,20 +201,26 @@ if (fooBar !== undefined) {
 * API WeakMap/WeakSet не связаны с WeakRef
 * Конечно, WeakRef не препятствует очистке элементов в WeakMap/WeakSet
 * Map + WeakRef !== WeakMap (проблема в ссылках из значений на ключи)
-* WeakMap основан на ephemeron, а не на "классических" слабых ссылках
-
-<!-- TODO разобраться с Map + WeakRef !== WeakMap -->
+* WeakMap основан на [ephemeron](http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf), а не на "классических" слабых ссылках
 
 ---
 
 # FinalizationGroup
 
-TODO
+```javascript
+function cleanUp(holdings) {
+  for (const i of holdings) {
+    console.log(i);
+  }
+}
 
-https://github.com/tc39/proposal-weakrefs#another-note-of-caution
-https://github.com/tc39/proposal-weakrefs#scheduling-of-finalizers-and-consistency-of-multiple-deref-calls
+const fg = new FinalizationGroup(cleanUp);
+const obj = {};
+fg.register(obj, 42);
 
-КО подсказывает: время сборки мусора непредсказуемо
+// после того, как obj собран
+// 42
+```
 
 ---
 
@@ -241,6 +247,13 @@ section h1 {
 ---
 
 TODO
+
+<!--
+https://github.com/tc39/proposal-weakrefs#another-note-of-caution
+https://github.com/tc39/proposal-weakrefs#scheduling-of-finalizers-and-consistency-of-multiple-deref-calls
+
+КО подсказывает: время сборки мусора непредсказуемо
+-->
 
 ---
 
@@ -303,4 +316,3 @@ section {
 * https://github.com/tc39/proposal-weakrefs
 * https://github.com/tc39/proposal-weakrefs/blob/master/history/weakrefs.md
 * http://www.cs.bu.edu/techreports/pdf/2005-031-weak-refs.pdf
-* http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf
