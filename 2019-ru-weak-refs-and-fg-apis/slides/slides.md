@@ -153,6 +153,18 @@ console.log('baz: ', foo.bar.deref());
 
 ---
 
+# История появления weak reference
+
+* Диалекты Lisp
+* Haskell
+* Java 1.2, 1998
+* Perl 5.xxx, 1999
+* Python 2.1, 2001
+* .NET Framework 1.1, 2002
+* И много чего еще
+
+---
+
 <style scoped>
 section h1 {
   position: absolute;
@@ -189,7 +201,9 @@ if (fooBar !== undefined) {
 * API WeakMap/WeakSet не связаны с WeakRef
 * Конечно, WeakRef не препятствует очистке элементов в WeakMap/WeakSet
 * Map + WeakRef !== WeakMap (проблема в ссылках из значений на ключи)
-* WeakMap основан на [ephemeron](http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf), а не на "классических" слабых ссылках
+* WeakMap основан на ephemeron, а не на "классических" слабых ссылках
+
+<!-- TODO разобраться с Map + WeakRef !== WeakMap -->
 
 ---
 
@@ -199,6 +213,8 @@ TODO
 
 https://github.com/tc39/proposal-weakrefs#another-note-of-caution
 https://github.com/tc39/proposal-weakrefs#scheduling-of-finalizers-and-consistency-of-multiple-deref-calls
+
+КО подсказывает: время сборки мусора непредсказуемо
 
 ---
 
@@ -284,4 +300,7 @@ section {
 
 # Полезные ссылки
 
-TODO
+* https://github.com/tc39/proposal-weakrefs
+* https://github.com/tc39/proposal-weakrefs/blob/master/history/weakrefs.md
+* http://www.cs.bu.edu/techreports/pdf/2005-031-weak-refs.pdf
+* http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf
