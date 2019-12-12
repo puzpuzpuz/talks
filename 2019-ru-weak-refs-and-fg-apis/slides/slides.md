@@ -205,6 +205,16 @@ if (fooBar !== undefined) {
 
 ---
 
+# Особенность WeakRef'ов
+
+*Фрагмент proposal*:
+
+The WeakRefs proposal guarantees that multiple calls to WeakRef.prototype.deref() return the same result within a certain timespan: either all should return undefined, or all should return the object.
+
+In HTML, this timespan runs until a microtask checkpoint, where HTML performs a microtask checkpoint when the JavaScript execution stack becomes empty, after all Promise reactions have run.
+
+---
+
 # FinalizationGroup
 
 ```javascript
@@ -221,6 +231,14 @@ fg.register(obj, 42);
 // после того, как obj собран
 // 42
 ```
+
+---
+
+# КО подсказывает
+
+* Время сборки мусора непредсказуемо
+* Разные JS движки могут вести себя по-разному
+* Финализаторы - нишевая штука, которую стоит избегать в большинстве случаев
 
 ---
 
@@ -247,13 +265,6 @@ section h1 {
 ---
 
 TODO
-
-<!--
-https://github.com/tc39/proposal-weakrefs#another-note-of-caution
-https://github.com/tc39/proposal-weakrefs#scheduling-of-finalizers-and-consistency-of-multiple-deref-calls
-
-КО подсказывает: время сборки мусора непредсказуемо
--->
 
 ---
 
