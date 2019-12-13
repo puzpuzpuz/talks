@@ -260,11 +260,20 @@ section h1 {
 
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
-# Простые примеры использования
+# Примеры использования
 
 ---
 
-TODO
+# Простые примеры
+
+![h:500 center](./images/demo.png)
+
+---
+
+# Менее тривиальные примеры
+
+* Освобождение памяти WebAssembly (FG)
+* [Proposal](https://github.com/nodejs/node/pull/26540) для стандартного CLS API (resource path; WeakRef + FG?, WeakMap)
 
 ---
 
@@ -279,10 +288,6 @@ section h1 {
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
 # Шалости: Buffer pool для Node.js
-
----
-
-TODO
 
 ---
 
@@ -313,6 +318,11 @@ section {
 * Доклад про историю оптимизаций
   - Видео: https://youtu.be/CSnmpbZsVD4
   - Слайды: https://github.com/puzpuzpuz/talks/tree/master/2019-ru-nodejs-library-optimization
+
+---
+
+TODO
+Рассказ про Buffer, pool в Buffer.allocUnsafe, GH issue про Buffer.poolSize, идею про пул, основанный на FG
 
 ---
 
