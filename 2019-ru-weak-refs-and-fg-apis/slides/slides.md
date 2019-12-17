@@ -321,8 +321,99 @@ section {
 
 ---
 
-TODO
-Рассказ про Buffer, pool в Buffer.allocUnsafe, GH issue про Buffer.poolSize, идею про пул, основанный на FG
+# Buffer API
+
+* https://nodejs.org/api/buffer.html
+* Низкоуровневый API для работы с непрерывными массивами байтов
+* На heap находится только мета-объект, сами данные - off-heap
+* В node core и многих библиотеках Buffer используются повсеместно
+
+---
+
+# Buffer.allocUnsafe
+
+```javascript
+// небезопасно, но быстро :)
+let buf = Buffer.allocUnsafe(1024);
+// содержимое - произвольное (не ноли)
+console.log(buf);
+```
+
+---
+
+# Альтернативы Buffer.allocUnsafe
+
+```javascript
+// небезопасно и медленно
+buf = Buffer.allocUnsafeSlow(1024);
+// безопасно и медленно (одни ноли)
+buf = Buffer.alloc(1024);
+```
+
+---
+
+# Почему Buffer.allocUnsafe быстрее?
+
+Фрагмент из `buffer.js`:
+
+```javascript
+Buffer.poolSize = 8 * 1024;
+
+function createPool() {
+  poolSize = Buffer.poolSize;
+  allocPool = createUnsafeArrayBuffer(poolSize);
+  poolOffset = 0;
+}
+createPool();
+```
+
+---
+
+# Почему Buffer.allocUnsafe быстрее?
+
+```javascript
+function allocate(size) {
+  if (size <= 0) { return new FastBuffer(); }
+  if (size < (Buffer.poolSize >>> 1)) {
+    if (size > (poolSize - poolOffset)) createPool();
+    const b = new FastBuffer(allocPool, poolOffset, size);
+    poolOffset += size;
+    alignPool();
+    return b;
+  }
+  return createUnsafeBuffer(size);
+}
+
+Buffer.allocUnsafe = function allocUnsafe(size) {
+  assertSize(size);
+  return allocate(size);
+};
+```
+
+---
+
+# Предпосылки
+
+* От значения `Buffer.poolSize` зависит используется ли "пул", т.е. производительность многих функций из `Buffer`
+* Отсюда: https://github.com/nodejs/node/issues/30611
+* В ходе обсуждения с контрибьютерами появилась идея
+* Почему бы не использовать FinalizationGroup API для создания "настоящего" пула буферов?
+* P.S. Core node team подумывают увеличить дефолт для `Buffer.poolSize`:
+  - https://github.com/nodejs/node/issues/27121
+  - https://github.com/nodejs/node/pull/30661
+
+---
+
+# Эксперимент с Buffer pool
+
+* Описание эксперимента: https://github.com/nodejs/node/issues/30683
+* Ветка с экспериментальной реализацией пула: https://github.com/puzpuzpuz/nbufpool/tree/experiment/fg-api-based-pool
+
+---
+
+# nbufpool
+
+![h:500 center](./images/demo.png)
 
 ---
 
