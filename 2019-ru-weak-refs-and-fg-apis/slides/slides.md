@@ -59,6 +59,36 @@ table td {
 
 ---
 
+![h:80](./images/imdg-logo.jpg)
+
+* Hazelcast In-Memory Data Grid (IMDG)
+* Большой набор распределенных структур данных
+* Показательный пример - `Map`, который часто используют как кэш
+* Написана на Java, умеет embedded и standalone режимы
+* Хорошо масштабируется вертикально и горизонтально
+* Часто используется в high-load и low-latency приложениях
+* Области применения: IoT, in-memory stream processing, payment processing, fraud detection и т.д.
+
+---
+
+<br/><br/>
+
+# Hazelcast IMDG Node.js client
+
+<style scoped>
+section {
+  background: #fff url(images/hazelcast-plus-node.jpg) no-repeat center 80px;
+  background-size: 400px;
+}
+</style>
+
+* https://github.com/hazelcast/hazelcast-nodejs-client
+* Доклад про историю оптимизаций
+  - Видео: https://youtu.be/CSnmpbZsVD4
+  - Слайды: https://github.com/puzpuzpuz/talks/tree/master/2019-ru-nodejs-library-optimization
+
+---
+
 # План на сегодня
 
 * История вопроса
@@ -291,36 +321,6 @@ section h1 {
 
 ---
 
-![h:80](./images/imdg-logo.jpg)
-
-* Hazelcast In-Memory Data Grid (IMDG)
-* Большой набор распределенных структур данных
-* Показательный пример - `Map`, который часто используют как кэш
-* Написана на Java, умеет embedded и standalone режимы
-* Хорошо масштабируется вертикально и горизонтально
-* Часто используется в high-load и low-latency приложениях
-* Области применения: IoT, in-memory stream processing, payment processing, fraud detection и т.д.
-
----
-
-<br/><br/>
-
-# Hazelcast IMDG Node.js client
-
-<style scoped>
-section {
-  background: #fff url(images/hazelcast-plus-node.jpg) no-repeat center 80px;
-  background-size: 400px;
-}
-</style>
-
-* https://github.com/hazelcast/hazelcast-nodejs-client
-* Доклад про историю оптимизаций
-  - Видео: https://youtu.be/CSnmpbZsVD4
-  - Слайды: https://github.com/puzpuzpuz/talks/tree/master/2019-ru-nodejs-library-optimization
-
----
-
 # Buffer API
 
 * https://nodejs.org/api/buffer.html
@@ -414,6 +414,33 @@ Buffer.allocUnsafe = function allocUnsafe(size) {
 # nbufpool
 
 ![h:500 center](./images/demo.png)
+
+---
+
+# Что в итоге?
+
+* Мы (Hazelcast) помешаны на производительности 🙂
+* Эксперимент с Buffer pool продолжится:
+  - Manual alloc/free
+  - Buddy & slab allocator algorithms
+  - Прочие шалости
+
+---
+
+<br/><br/>
+
+# Call to Action
+
+<style scoped>
+section {
+  background: #fff url(images/hazelcast-plus-node.jpg) no-repeat center 80px;
+  background-size: 400px;
+}
+</style>
+
+* Все, кому интересны высокопроизводительные библиотеки<br/>(и распределенные системы) - welcome
+* https://github.com/hazelcast/hazelcast-nodejs-client
+* P.S. Contributions are welcome as well
 
 ---
 
