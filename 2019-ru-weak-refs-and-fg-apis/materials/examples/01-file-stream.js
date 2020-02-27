@@ -8,17 +8,17 @@ class FileStream {
     }
   }
 
-  static _finalizationGroup = new FinalizationGroup(this._cleanUp);
+  static _registry = new FinalizationRegistry(this._cleanUp);
   _file;
 
   constructor(fileName) {
     this._file = new File(fileName);
-    FileStream._finalizationGroup.register(this, this._file, this);
+    FileStream._registry.register(this, this._file, this);
     // eagerly trigger async read of file contents into this.data
   }
 
   close() {
-    FileStream._finalizationGroup.unregister(this);
+    FileStream._registry.unregister(this);
     File.close(this._file);
     // other cleanup
   }

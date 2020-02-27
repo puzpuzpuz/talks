@@ -4,7 +4,7 @@
 class IterableWeakMap {
     _weakMap = new WeakMap();
     _refSet = new Set();
-    _finalizationGroup = new FinalizationGroup(IterableWeakMap._cleanup);
+    _registry = new FinalizationRegistry(IterableWeakMap._cleanup);
 
     static _cleanup(iterator) {
         for (const { set, ref } of iterator) {
@@ -23,7 +23,7 @@ class IterableWeakMap {
 
         this._weakMap.set(key, { value, ref });
         this._refSet.add(ref);
-        this._finalizationGroup.register(key, {
+        this._registry.register(key, {
             set: this._refSet,
             ref
         }, ref);
@@ -42,7 +42,7 @@ class IterableWeakMap {
 
         this._weakMap.delete(key);
         this._refSet.delete(entry.ref);
-        this._finalizationGroup.unregister(entry.ref);
+        this._registry.unregister(entry.ref);
         return true;
     }
 

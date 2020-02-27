@@ -37,7 +37,7 @@ table td {
 
 <!-- _class: lead -->
 
-# Немного шалим со свежими<br/>WeakRef и FinalizationGroup API
+# Немного шалим со свежими<br/>WeakRef и FinalizationRegistry API
 
 ## Андрей Печкуров
 
@@ -92,7 +92,7 @@ section {
 # План на сегодня
 
 * История вопроса
-* Знакомство с WeakRef и FinalizationGroup API
+* Знакомство с WeakRef и FinalizationRegistry API
 * Простые примеры использования
 * Шалости: Buffer pool для Node.js
 
@@ -130,7 +130,7 @@ section h1 {
   - Reference counting
   - Escape analysis (compile-time, стоит особняком)
 * Разновидностей конкретных алгоритмов GC - весьма много
-* Кроме GC есть такие сompile-time штуки, как automatic reference counter (ARC)
+* Кроме GC есть такие сompile-time штуки, как Automatic Reference Counting (ARC)
 
 ---
 
@@ -188,7 +188,7 @@ console.log('baz: ', foo.bar.deref());
 * Диалекты Lisp
 * Haskell
 * Java 1.2, 1998
-* Perl 5.xxx, 1999
+* Perl 5, 1999
 * Python 2.1, 2001
 * .NET Framework 1.1, 2002
 * И много чего еще
@@ -205,7 +205,7 @@ section h1 {
 
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
-# Знакомство с WeakRef и FinalizationGroup API
+# Знакомство с WeakRef и FinalizationRegistry API
 
 ---
 
@@ -220,7 +220,7 @@ const validRef = new WeakRef({foo: 'bar'});
 const fooBar = validRef.deref();
 // в fooBar будет или наш объект, или undefined
 if (fooBar !== undefined) {
-  console.log('жив курилка!');
+  console.log('Жив, курилка!');
 }
 ```
 
@@ -230,8 +230,8 @@ if (fooBar !== undefined) {
 
 * API WeakMap/WeakSet не связаны с WeakRef
 * Конечно, WeakRef не препятствует очистке элементов в WeakMap/WeakSet
-* Map + WeakRef !== WeakMap (проблема в ссылках из значений на ключи)
-* WeakMap основан на [ephemeron](http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf), а не на "классических" слабых ссылках
+* Map + WeakRef !== WeakMap (проблема в ссылках между значениями и ключами)
+* WeakMap основан на механизме [ephemerons](http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf) (Haskell, Lua), а не на "классических" слабых ссылках
 
 ---
 
@@ -239,13 +239,13 @@ if (fooBar !== undefined) {
 
 *Фрагмент proposal*:
 
-The WeakRefs proposal guarantees that multiple calls to WeakRef.prototype.deref() return the same result within a certain timespan: either all should return undefined, or all should return the object.
+The WeakRefs proposal guarantees that multiple calls to WeakRef.prototype.deref() return the same result within a certain timespan: either all should return `undefined`, or all should return the object.
 
-In HTML, this timespan runs until a microtask checkpoint, where HTML performs a microtask checkpoint when the JavaScript execution stack becomes empty, after all Promise reactions have run.
+In HTML, this timespan runs until a microtask checkpoint, where HTML performs a microtask checkpoint when the JavaScript execution stack becomes empty, after all `Promise` reactions have run.
 
 ---
 
-# FinalizationGroup
+# FinalizationRegistry
 
 ```javascript
 function cleanUp(holdings) {
@@ -254,9 +254,9 @@ function cleanUp(holdings) {
   }
 }
 
-const fg = new FinalizationGroup(cleanUp);
+const fr = new FinalizationRegistry(cleanUp);
 const obj = {};
-fg.register(obj, 42);
+fr.register(obj, 42);
 
 // после того, как obj собран
 // 42
@@ -302,8 +302,8 @@ section h1 {
 
 # Менее тривиальные примеры
 
-* Освобождение памяти WebAssembly (FG)
-* [Proposal](https://github.com/nodejs/node/pull/26540) для стандартного CLS API (resource path; WeakRef + FG?, WeakMap)
+* [Освобождение памяти](https://github.com/tc39/proposal-weakrefs#exposing-webassembly-memory-to-javascript) при работе с объектами, использующими данные на стороне WebAssembly (FR)
+* Для обхода проблемы циклических ссылок в [модуле `domain`](https://github.com/nodejs/node/pull/25993) Node.js
 
 ---
 
@@ -326,7 +326,7 @@ section h1 {
 * https://nodejs.org/api/buffer.html
 * Низкоуровневый API для работы с непрерывными массивами байтов
 * На heap находится только мета-объект, сами данные - off-heap
-* В node core и многих библиотеках Buffer используются повсеместно
+* В самом Node.js и многих библиотеках Buffer используются повсеместно
 
 ---
 
@@ -354,7 +354,7 @@ buf = Buffer.alloc(1024);
 
 # Почему Buffer.allocUnsafe быстрее?
 
-Фрагмент из `buffer.js`:
+Фрагмент из [`lib/buffer.js`](https://github.com/nodejs/node/blob/74291e4a7ba6185c1b78a110538ed3db3bc6b244/lib/buffer.js):
 
 ```javascript
 Buffer.poolSize = 8 * 1024;
@@ -397,8 +397,8 @@ Buffer.allocUnsafe = function allocUnsafe(size) {
 * От значения `Buffer.poolSize` зависит используется ли "пул", т.е. производительность многих функций из `Buffer`
 * Отсюда: https://github.com/nodejs/node/issues/30611
 * В ходе обсуждения с контрибьютерами появилась идея
-* Почему бы не использовать FinalizationGroup API для создания "настоящего" пула буферов?
-* P.S. Core node team подумывают увеличить дефолт для `Buffer.poolSize`:
+* Почему бы не использовать FinalizationRegistry API для создания "настоящего" пула буферов?
+* P.S. В core команде подумывают увеличить дефолт для `Buffer.poolSize`:
   - https://github.com/nodejs/node/issues/27121
   - https://github.com/nodejs/node/pull/30661
 
@@ -420,7 +420,7 @@ Buffer.allocUnsafe = function allocUnsafe(size) {
 # Что в итоге?
 
 * Мы (Hazelcast) помешаны на производительности 🙂
-* Эксперимент с Buffer pool продолжится:
+* Эксперимент с Buffer pool, скорее всего, продолжится:
   - Manual alloc/free
   - Buddy & slab allocator algorithms
   - Прочие шалости
