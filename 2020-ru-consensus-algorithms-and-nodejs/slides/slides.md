@@ -580,6 +580,7 @@ section {
 
 * Designing Data-Intensive Applications, Martin Kleppmann, 2017
 * CASPaxos: Replicated State Machines without logs, Denis Rystsov, 2018 - https://arxiv.org/abs/1802.07000
+* Paxos Made Simple, Leslie Lamport, 2001 - https://lamport.azurewebsites.net/pubs/paxos-simple.pdf
 * https://raft.github.io/
 * https://jepsen.io
 * https://martin.kleppmann.com/2015/05/11/please-stop-calling-databases-cp-or-ap.html
