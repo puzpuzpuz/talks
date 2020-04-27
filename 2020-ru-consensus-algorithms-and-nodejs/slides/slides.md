@@ -420,13 +420,10 @@ section h1 {
 
 # Vanilla Paxos
 
-* Paxos (a.k.a. Synod/single-decree, 1998) - p2p (leaderless)
-* Позволяет принять строго одно решение (скажем, о значении регистра)
-* Вводит несколько ролей для процессов:
-  - Proposers: предлагают значения
-  - Acceptors: могут принимать предложения и информировать других об этом
-  - Learners: пишут итоговое значение на диск
-* На практике, один узел как правило имеет сразу несколько ролей
+* Paxos (1998) - p2p (leaderless)
+* В основе - Synod/Single-Decree Paxos
+* Позволяет принять строго одно решение (о значении регистра)
+* Часто под Paxos подразумевают семейство алгоритмов
 
 ---
 
@@ -472,18 +469,74 @@ section h1 {
 
 * CASPaxos (D.Rystsov, 2018) - p2p, replicated state
 * CAS - compare-and-set/compare-and-swap
-* Расширяет vanilla Paxos (Synod) путем репликации состояния, а не лога
+* Модифицирует Paxos (Synod), а не просто использует его как компонент для построения системы
+
+---
+
+# Основы CASPaxos
+
 * Использует один регистр (объект)
-* Регистр читается/изменяется командами-функциями, поэтому key-value storage реализовать очень просто
+* Вводит несколько ролей для процессов:
+  - Clients: клиенты системы, отправляют запросы к Proposer
+  - Proposers: принимают запросы клиентов, генерируют уникальные номера (proposal ID) и общаются с Acceptors
+  - Acceptors: могут принимать предложения Proposers, хранят принятое состояние
+* Для сохранения работоспособности системы до `F` отказов, нужны `2F + 1` Acceptors
+
+---
+
+# Phase 1
+
+![w:1100 center](./images/caspaxos-phase-1.png)
+
+---
+
+# Phase 2
+
+![w:1100 center](./images/caspaxos-phase-2.png)
+
+---
+
+# Связь с Synod
+
+CASPaxos эквивалентен Synod, если взять функцию:
+```
+x -> if x = ∅ then val0 else x
+```
+
+---
+
+# CAS регистр на основе CASPaxos
+
+Чтение:
+```
+x -> x
+```
+
+Инициализация значением `val0`:
+```
+x -> if x = ∅ then (0, val0) else x
+```
+
+Запись значения `val1` при условии версии `3`:
+```
+x -> if x = (3, *) then (4, val1) else x
+```
+
+---
+
+# CASPaxos-based key-value storage
+
+* Хранилище - это набор именованных экземпляров CASPaxos, по одному на ключ
+* Преимущества и недостатки подхода в сравнении с тем же Raft выходят за рамки доклада
 
 ---
 
 # Pet project: CASPaxos на Node.js
 
-https://github.com/gryadka/js
+https://github.com/gryadka/js (Node.js - proposers, Redis - acceptors)
 ||
 \\/
-https://github.com/puzpuzpuz/ogorod
+https://github.com/puzpuzpuz/ogorod (Node.js - proposers & acceptors)
 
 ---
 
