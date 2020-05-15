@@ -133,7 +133,13 @@ class DataPoint {
 
 # Simple math
 
-![center](./images/simple-math.png)
+![center](./images/simple-math-1.png)
+
+---
+
+# Simple math
+
+![center](./images/simple-math-2.png)
 
 <!-- TODO describe problems related with time series data:
      large volume of data, lots of writes, less reads -->
