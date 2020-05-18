@@ -78,11 +78,11 @@ table td {
 
 # Agenda
 
+* A quick intro
 * The problem
 * Considered options
 * Decisions made
-* Current results
-* Further plans
+* Results and plans
 
 ---
 
@@ -96,7 +96,7 @@ section h1 {
 
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
-# The problem
+# A quick intro
 
 ---
 
@@ -105,6 +105,16 @@ section h1 {
 **Metric** - a numerical value that can be measured at particular time and has a real world meaning. Examples: CPU load, used heap memory. Characterized by name and a set of tags.
 
 **Data point** - a metric value measured at the given time. Characterized by metric, timestamp (Unix time) and a value.
+
+---
+
+# Types of metrics
+
+* Gauge (e.g. CPU load, memory consumption)
+* Counter (e.g. number of processed operations)
+* Histogram (e.g. operation processing latency) - not supported yet
+
+<!-- TODO add illustrations -->
 
 ---
 
@@ -141,12 +151,65 @@ class DataPoint {
 
 ![center](./images/simple-math-2.png)
 
-<!-- TODO describe problems related with time series data:
-     large volume of data, lots of writes, less reads -->
+---
+
+# Summary
+
+Time series data (usually) implies:
+* Lots of writes. Thus, large data volume
+* Significantly less reads
+* Raw and aggregate queries
 
 ---
 
-<!-- describe popular storage formats -->
+# Storage formats
+
+* Columnar storage format
+* Log-structured merge-tree (LSM tree)
+* B-tree
+* Their variations
+
+<!-- TODO double check the list -->
+
+---
+
+# Columnar format
+
+<!-- TODO add illustration -->
+
+---
+
+# LSM tree
+
+<!-- TODO add illustration -->
+
+---
+
+# Data compression
+
+* Integer compression
+  - Delta encoding
+  - Delta-of-delta encoding
+  - Simple-8b
+  - Run-length encoding
+* Floating point compression
+  - XOR-based compression
+* Type-agnostic compression
+  - Dictionary compression
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# The problem
 
 ---
 
@@ -213,9 +276,12 @@ section h1 {
 * InfluxDB
 * TimescaleDB
 * Prometheus
+* ClickHouse
 * Kdb+
 * Graphite
 * etc.
+
+<!-- put logos here -->
 
 ---
 
@@ -226,16 +292,210 @@ section h1 {
 
 ---
 
-<br/><br/>
+# Embedded non-TS DBs/storages
 
-# Call to Action
+* SQL DBs
+  - H2 DB (B-tree)
+* Key-value storages
+  - H2's MVStore (B-tree)
+  - MapDB (HTree, B-tree)
+  - RocksDB (LSM tree)
+
+<!-- TODO: consider using a table here -->
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# Decisions made
+
+---
+
+# Initial ideas
+
+After initial research and experiments we decided the following:
+* Build a TS storage on top of a key-value storage
+* Keep the storage API simple
+
+---
+
+# Primitive data layout
+
+![center](./images/primitive-key-value-layout.png)
+
+---
+
+# Draft API
+
+```java
+public interface MetricsStorage extends AutoCloseable {
+
+    void store(Collection<DataPoint> dataPoints);
+
+    DataPointSeries queryRange(Query query);
+
+    Optional<DataPoint> queryLatest(Query query);
+
+}
+```
+
+---
+
+# TODO list
+
+1. Choose one of embedded key-value storages
+2. Come up with a way to reduce number of persisted entries
+3. Think of sufficient data compression for the persisted data
+
+---
+
+# Item 1: embedded key-value storage
+
+After some experiments we picked up two candidates
+* MapDB (Java)
+* RocksDB (C++ with JNI bindings)
+
+<!-- TODO add more fields and use a table -->
+
+---
+
+# Item 2: number of persisted entries
+
+* We need to group multiple data points into a single entry somehow
+* What if we store data points in buckets? Say, a bucket per minute
+
+---
+
+# Bucketed data layout
+
+![center](./images/bucketed-key-value-layout.png)
+
+---
+
+# Item 3: data compression
+
+* Keys
+  - We could use dictionary compression for metrics
+* Values
+  - For each minute bucket we could use compression methods for integer numbers, like delta encoding
+
+---
+
+# Overall design
+
+![h:580 center](./images/metrics-storage-overview.png)
+
+---
+
+# Writes
+
+![h:580 center](./images/metrics-storage-writes.png)
+
+---
+
+# Reads
+
+![h:580 center](./images/metrics-storage-reads.png)
+
+---
+
+# Metrics Registry
+
+![center](./images/metrics-registry-layout.png)
+
+---
+
+# Data compression: keys
+
+![center](./images/compressed-keys.png)
+
+---
+
+# Data compression: values
+
+![center](./images/compressed-values.png)
+
+---
+
+# Values compression efficiency
+
+| Scenario | Raw* (bytes) | Delta&nbsp;compressed* (bytes) | Compressed (bytes) | Ratio (vs.&nbsp;Raw) |
+|---|--:|--:|--:|-:|
+| Const&nbsp;`int` (3&nbsp;sec) | 480 | 360 | 13 | x37 |
+| Random&nbsp;`int` (3&nbsp;sec) | 480 | 364 | 156 | x3 |
+
+\* `Long.MIN_VALUE` is used to represent missing values
+
+---
+
+# Other features
+
+* Data retention
+  - Based on per entry time-to-live (TTL) in RocksDB
+* Data durability
+  - Pending minute buckets are persisted on graceful shutdown
+* Aggregation API
+  - Built on top of the storage
+
+<!-- TODO: describe potential problems,
+       like insufficient in-memory cache size and
+            out of order writes
+-->
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# Results and plans
+
+---
+
+# Benchmark results
+
+* Scenario:
+  - Emulates 10 members, 120,000 metrics, 3 second interval
+  - Random values from 0-1000 range
+* Writes* - 400K data point/sec
+* Random minute series reads* - 19K ops/sec
+
+\* Results were obtained on a laptop
+
+---
+
+# Further plans
+
+* Support additional indexes for metrics
+* Expose diagnostics information in runtime
+* Perform additional testing and optimization
+
+---
+
+![h:80](./images/imdg-logo.jpg)
+
+# Call to action
 
 * You may want to give a try with IMDG and MC: https://hazelcast.org/
 * Open source contributions are welcome as well!
 
 ---
 
-# Спасибо за внимание!
+# Thank you!
 
 <!-- TODO fix the code -->
 ![w:400 center](./images/slides-qr-code.png)
@@ -244,5 +504,7 @@ section h1 {
 
 # Helpful links
 
-* TBD
+* https://docs.hazelcast.org/docs/4.0.1/manual/html-single/index.html#metrics
 * https://blog.timescale.com/blog/time-series-compression-algorithms-explained/
+
+<!-- TODO add more links -->
