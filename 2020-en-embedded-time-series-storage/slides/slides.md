@@ -242,7 +242,7 @@ IMDG v4.0+ is capable of reporting collected metrics (probes) to MC in a generic
 # The challenge
 
 * MC has to store those metrics somehow
-* Thus, we need a Time Series Storage
+* Thus, we need a time series database (or, at least, storage)
 * Here comes the challenge...
 
 ---
@@ -486,8 +486,9 @@ section h1 {
 * Scenario:
   - Emulates 10 members, 120,000 metrics, 3 second interval
   - Random values from 0-1000 range
-* Writes* - 400K data point/sec
-* Random minute series reads* - 19K ops/sec
+* Results:
+  - Writes* - 400K data point/sec
+  - Random minute series reads* - 19K ops/sec
 
 \* Results were obtained on a laptop
 
