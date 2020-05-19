@@ -341,7 +341,7 @@ After initial research and experiments we decided the following:
 # Draft API
 
 ```java
-public interface MetricsStorage extends AutoCloseable {
+public interface MetricsStorage {
 
     void store(Collection<DataPoint> dataPoints);
 
