@@ -1,6 +1,7 @@
 ---
 marp: true
 theme: default
+footer: '![image h:40](./images/hazelcast-logo.png)'
 ---
 
 <style>
@@ -10,6 +11,10 @@ section.lead h1 {
 
 section.lead h1, section.lead h2 {
   padding-left: 30px;
+}
+
+section.lead footer {
+  visibility: hidden;
 }
 
 section {
@@ -71,11 +76,6 @@ table td {
 
 ---
 
-<!-- # The topic
-
-* For an upcoming version of MC we had to implement an embedded time series storage from existing components
-* So, we are going to talk of considered options, experienced problems and technical decisions -->
-
 # Agenda
 
 * A quick intro
@@ -102,9 +102,11 @@ section h1 {
 
 # Terminology
 
-**Metric** - a numerical value that can be measured at particular time and has a real world meaning. Examples: CPU load, used heap memory. Characterized by name and a set of tags.
+**Metric** - a numerical value that can be measured at particular time and has a real world meaning. Examples: CPU load, used heap memory. Characterized by name and a set of tags*.
 
 **Data point** - a metric value measured at the given time. Characterized by metric, timestamp (Unix time) and a value.
+
+\* We'll use term "metric" instead of "metric + tags".
 
 ---
 
@@ -114,7 +116,9 @@ section h1 {
 * Counter (e.g. number of processed operations)
 * Histogram (e.g. operation processing latency) - not supported yet
 
-<!-- TODO add illustrations -->
+<br/>
+
+![center h:128](./images/metric-types.png)
 
 ---
 
@@ -141,6 +145,12 @@ class DataPoint {
 
 ---
 
+# Sample time series
+
+![center](./images/sample-time-series.png)
+
+---
+
 # Simple math
 
 ![center](./images/simple-math-1.png)
@@ -164,24 +174,22 @@ Time series data (usually) implies:
 
 # Storage formats
 
-* Columnar storage format
+* Column-oriented storage
 * Log-structured merge-tree (LSM tree)
 * B-tree
-* Their variations
-
-<!-- TODO double check the list -->
+* Their variations and combinations
 
 ---
 
-# Columnar format
+# Column-oriented storage
 
-<!-- TODO add illustration -->
+![center](./images/column-oriented-storage.png)
 
 ---
 
 # LSM tree
 
-<!-- TODO add illustration -->
+![center h:600](./images/lsm-tree.png)
 
 ---
 
@@ -196,6 +204,7 @@ Time series data (usually) implies:
   - XOR-based compression
 * Type-agnostic compression
   - Dictionary compression
+  - Bitmap encoding
 
 ---
 
@@ -480,7 +489,8 @@ section h1 {
 
 # Further plans
 
-* Support additional indexes for metrics
+* Implement downsampling
+* Add support for additional indexes over metrics
 * Expose diagnostics information in runtime
 * Perform additional testing and optimization
 
@@ -506,5 +516,6 @@ section h1 {
 
 * https://docs.hazelcast.org/docs/4.0.1/manual/html-single/index.html#metrics
 * https://blog.timescale.com/blog/time-series-compression-algorithms-explained/
+* https://github.com/facebook/rocksdb/wiki/Leveled-Compaction
 
 <!-- TODO add more links -->
