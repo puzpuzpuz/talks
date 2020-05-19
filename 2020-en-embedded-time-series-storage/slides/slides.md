@@ -166,8 +166,13 @@ class DataPoint {
 # Summary
 
 Time series data (usually) implies:
-* Lots of writes. Thus, large data volume
-* Significantly less reads
+* Large data volume
+* Writes:
+  - Lots of writes
+  - Writes involve data points for all metrics or most of them
+* Reads:
+  - Significantly less reads
+  - Reads assume one or several time series over a time range
 * Raw and aggregate queries
 
 ---
@@ -438,10 +443,13 @@ RocksDB won the battle in the end.
 
 # Value compression efficiency
 
-| Scenario | Raw* (bytes) | Delta&nbsp;compressed* (bytes) | Compressed (bytes) | Ratio (vs.&nbsp;Raw) |
+| Scenario | Raw* (bytes) | Raw&nbsp;+&nbsp;delta* (bytes) | Bitmap&nbsp;+&nbsp;delta (bytes) | Ratio (vs.&nbsp;Raw) |
 |---|--:|--:|--:|-:|
-| Const&nbsp;`int` (3&nbsp;sec) | 480 | 360 | 13 | x37 |
-| Random&nbsp;`int` (3&nbsp;sec) | 480 | 364 | 156 | x3 |
+| Const&nbsp;`long`&nbsp;(1&nbsp;sec) | 480 | 17 | 13 | x36.9 |
+| Const&nbsp;`long`&nbsp;(3&nbsp;sec) | 480 | 366 | 20 | x24 |
+| Random&nbsp;`int`&nbsp;(3&nbsp;sec) | 480 | 366 | 155 | x3.1 |
+| Random&nbsp;`long`&nbsp;(3&nbsp;sec) | 480 | 366 | 171 | x2.8 |
+| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<100) | 480 | 366 | 56 | x8.6 |
 
 \* `Long.MIN_VALUE` is used to represent missing values
 
@@ -484,7 +492,7 @@ section h1 {
 # Benchmark results
 
 * Scenario:
-  - Emulates 10 members, 120,000 metrics, 3 second interval
+  - Emulates 10 members, 120K metrics, 3 second interval
   - Random values from 0-1000 range
 * Results:
   - Writes* - 400K data point/sec
