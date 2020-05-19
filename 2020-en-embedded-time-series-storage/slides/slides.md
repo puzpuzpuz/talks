@@ -522,6 +522,6 @@ section h1 {
 
 * https://docs.hazelcast.org/docs/4.0.1/manual/html-single/index.html#metrics
 * https://blog.timescale.com/blog/time-series-compression-algorithms-explained/
+* Gorilla: a fast, scalable, in-memory time series database, 2015 - https://dl.acm.org/doi/10.14778/2824032.2824078
 * https://github.com/facebook/rocksdb/wiki/Leveled-Compaction
-
-<!-- TODO add more links -->
+* https://www.mongodb.com/blog/post/time-series-data-and-mongodb-part-2-schema-design-best-practices
