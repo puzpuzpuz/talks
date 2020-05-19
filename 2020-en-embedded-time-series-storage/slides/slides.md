@@ -114,7 +114,7 @@ section h1 {
 
 * Gauge (e.g. CPU load, memory consumption)
 * Counter (e.g. number of processed operations)
-* Histogram (e.g. operation processing latency) - not supported yet
+* Histogram (e.g. operation processing latency)
 
 <br/>
 
@@ -286,11 +286,9 @@ section h1 {
 * TimescaleDB
 * Prometheus
 * ClickHouse
-* Kdb+
-* Graphite
-* etc.
+* and many more
 
-<!-- put logos here -->
+![bg 80% right:60%](./images/ts-db-logos.png)
 
 ---
 
@@ -309,8 +307,6 @@ section h1 {
   - H2's MVStore (B-tree)
   - MapDB (HTree, B-tree)
   - RocksDB (LSM tree)
-
-<!-- TODO: consider using a table here -->
 
 ---
 
@@ -368,18 +364,18 @@ public interface MetricsStorage extends AutoCloseable {
 
 # Item 1: embedded key-value storage
 
-After some experiments we picked up two candidates
+After some experiments we picked up two candidates:
 * MapDB (Java)
 * RocksDB (C++ with JNI bindings)
 
-<!-- TODO add more fields and use a table -->
+RocksDB won the battle in the end.
 
 ---
 
 # Item 2: number of persisted entries
 
 * We need to group multiple data points into a single entry somehow
-* What if we store data points in buckets? Say, a bucket per minute
+* What if we store data points in buckets? Say, each bucket will contain data points within a minute
 
 ---
 
@@ -434,7 +430,13 @@ After some experiments we picked up two candidates
 
 ---
 
-# Values compression efficiency
+# Sample compressed value
+
+![center](./images/compressed-values-sample.png)
+
+---
+
+# Value compression efficiency
 
 | Scenario | Raw* (bytes) | Delta&nbsp;compressed* (bytes) | Compressed (bytes) | Ratio (vs.&nbsp;Raw) |
 |---|--:|--:|--:|-:|
@@ -454,10 +456,14 @@ After some experiments we picked up two candidates
 * Aggregation API
   - Built on top of the storage
 
-<!-- TODO: describe potential problems,
-       like insufficient in-memory cache size and
-            out of order writes
--->
+---
+
+# Design restrictions
+
+* Insufficient in-memory cache size scenario
+  - Potential solution: adapt the size dynamically
+* Out of order writes (>1 minute time window)
+  - Potential solution: merge buckets during background persistence
 
 ---
 
@@ -489,8 +495,8 @@ section h1 {
 
 # Further plans
 
-* Implement downsampling
 * Add support for additional indexes over metrics
+* Implement downsampling
 * Expose diagnostics information in runtime
 * Perform additional testing and optimization
 
@@ -507,7 +513,6 @@ section h1 {
 
 # Thank you!
 
-<!-- TODO fix the code -->
 ![w:400 center](./images/slides-qr-code.png)
 
 ---
