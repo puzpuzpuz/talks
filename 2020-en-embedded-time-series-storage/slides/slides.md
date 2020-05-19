@@ -420,7 +420,7 @@ RocksDB won the battle in the end.
 
 # Data compression: keys
 
-![center](./images/compressed-keys.png)
+![center h:360](./images/compressed-keys.png)
 
 ---
 
