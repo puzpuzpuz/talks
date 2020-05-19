@@ -443,15 +443,12 @@ RocksDB won the battle in the end.
 
 # Value compression efficiency
 
-| Scenario | Raw* (bytes) | Raw&nbsp;+&nbsp;delta* (bytes) | Bitmap&nbsp;+&nbsp;delta (bytes) | Ratio (vs.&nbsp;Raw) |
-|---|--:|--:|--:|-:|
-| Const&nbsp;`long`&nbsp;(1&nbsp;sec) | 480 | 17 | 13 | x36.9 |
-| Const&nbsp;`long`&nbsp;(3&nbsp;sec) | 480 | 366 | 20 | x24 |
-| Random&nbsp;`int`&nbsp;(3&nbsp;sec) | 480 | 366 | 155 | x3.1 |
-| Random&nbsp;`long`&nbsp;(3&nbsp;sec) | 480 | 366 | 171 | x2.8 |
-| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<100) | 480 | 366 | 56 | x8.6 |
-
-\* `Long.MIN_VALUE` is used to represent missing values
+| Scenario | Raw&nbsp;(bytes) | Compressed&nbsp;(bytes) | Ratio |
+|:---|--:|--:|--:|
+| Const&nbsp;`long`&nbsp;(1&nbsp;sec) | 480 | 12 | x40 |
+| Const&nbsp;`long`&nbsp;(3&nbsp;sec) | 160 | 19 | x8.4 |
+| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<1000) | 160 | 56 | x2.9 |
+| Random&nbsp;`long`&nbsp;(3&nbsp;sec) | 160 | 170 | x0.9 |
 
 ---
 
@@ -470,6 +467,8 @@ RocksDB won the battle in the end.
 
 * Insufficient in-memory cache size scenario
   - Potential solution: adapt the size dynamically
+* Loss of last minute data on force shutdown
+  - Potential solution: additional WAL or flush data on more frequent checkpoints
 * Out of order writes (>1 minute time window)
   - Potential solution: merge buckets during background persistence
 
