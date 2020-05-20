@@ -226,6 +226,30 @@ Time series data (usually) implies:
 
 ---
 
+# Delta encoding
+
+![center h:280](./images/delta-encoding.png)
+
+---
+
+# Run-length encoding
+
+![center h:280](./images/run-length-encoding.png)
+
+---
+
+# Dictionary compression
+
+![center h:550](./images/dictionary-compression.png)
+
+---
+
+# Bitmap encoding
+
+![center h:450](./images/bitmap-encoding.png)
+
+---
+
 <style scoped>
 section h1 {
   position: absolute;
