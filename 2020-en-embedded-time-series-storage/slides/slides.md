@@ -435,7 +435,7 @@ RocksDB won the battle in the end.
 | | Cost&nbsp;(bytes) |
 |:---|--:|
 | Raw | 16* |
-| Metric&nbsp;Storage | 5.25** |
+| Metrics&nbsp;Storage | 5.25** |
 | Prometheus | 3.3 |
 | Gorilla | 1.37 |
 
@@ -499,14 +499,20 @@ section h1 {
 
 ---
 
-# Benchmark results
+# Simple benchmark
 
-* Scenario:
-  - Emulates 10 members, 120K metrics, 3 second interval
-  - Random values from 0-1000 range
-* Results:
-  - Writes* - 400K data point/sec
-  - Random minute series reads* - 19K ops/sec
+Scenario:
+  * Emulates 10 members, 120K metrics, 3 second interval
+  * Random values from 0-1000 range
+
+---
+
+# Benchmark results*
+
+* Write throughput:
+  - 400K data point/sec
+* Read throughput (random minute series reads):
+  - 19K ops/sec
 
 \* Results were obtained on a laptop
 
