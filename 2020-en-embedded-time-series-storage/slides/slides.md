@@ -143,7 +143,7 @@ section h1 {
 class DataPoint {
 
     String metric;
-    List<Map.Entry<String, String>> tags;
+    Map<String, String> tags;
     long time;
     long value;
 
