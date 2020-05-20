@@ -82,7 +82,7 @@ https://hazelcast.org
 
 * Hazelcast IMDG Management Center (MC)
 * Monitoring & management application for IMDG clusters
-* Supports stand-alone and servlet container deployment
+* Supports standalone and servlet container deployment
 * Self-contained application, i.e. .jar file and Java is everything you need
 * Frontend part is built with TypeScript, React and Redux
 * Backend part is built with Java, Spring and IMDG Java client
@@ -115,9 +115,9 @@ section h1 {
 
 # Terminology
 
-**Metric** - a numerical value that can be measured at particular time and has a real world meaning. Examples: CPU load, used heap memory. Characterized by name and a set of tags*.
+**Metric** - a numerical value that can be measured at particular time and has a real world meaning. Examples: CPU load, used heap memory. Characterized by name and set of tags*.
 
-**Data point** - a metric value measured at the given time. Characterized by metric, timestamp (Unix time) and a value.
+**Data point** - a metric value measured at the given time. Characterized by metric, timestamp (Unix time) and value.
 
 \* We'll use term "metric" instead of "metric + tags".
 
