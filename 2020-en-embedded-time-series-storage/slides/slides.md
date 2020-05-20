@@ -190,66 +190,6 @@ Time series data (usually) implies:
 
 ---
 
-# Storage formats
-
-* Column-oriented storage
-* Log-structured merge-tree (LSM tree)
-* B-tree
-* Their variations and combinations
-
----
-
-# Column-oriented storage
-
-![center](./images/column-oriented-storage.png)
-
----
-
-# LSM tree
-
-![center h:600](./images/lsm-tree.png)
-
----
-
-# Data compression
-
-* Integer compression
-  - Delta encoding
-  - Delta-of-delta encoding
-  - Simple-8b
-  - Run-length encoding
-* Floating point compression
-  - XOR-based compression
-* Type-agnostic compression
-  - Dictionary compression
-  - Bitmap encoding
-
----
-
-# Delta encoding
-
-![center h:280](./images/delta-encoding.png)
-
----
-
-# Run-length encoding
-
-![center h:280](./images/run-length-encoding.png)
-
----
-
-# Dictionary compression
-
-![center h:550](./images/dictionary-compression.png)
-
----
-
-# Bitmap encoding
-
-![center h:450](./images/bitmap-encoding.png)
-
----
-
 <style scoped>
 section h1 {
   position: absolute;
@@ -603,3 +543,77 @@ section h1 {
 * Gorilla: a fast, scalable, in-memory time series database, 2015 - https://dl.acm.org/doi/10.14778/2824032.2824078
 * https://github.com/facebook/rocksdb/wiki/Leveled-Compaction
 * https://www.mongodb.com/blog/post/time-series-data-and-mongodb-part-2-schema-design-best-practices
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# Bonus unlocked 🏅🏅🏅
+
+---
+
+# Bonus 1: storage formats
+
+* Column-oriented storage
+* Log-structured merge-tree (LSM tree)
+* B-tree
+* Their variations and combinations
+
+---
+
+# Column-oriented storage
+
+![center](./images/column-oriented-storage.png)
+
+---
+
+# LSM tree
+
+![center h:600](./images/lsm-tree.png)
+
+---
+
+# Bonus 2: data compression
+
+* Integer compression
+  - Delta encoding
+  - Delta-of-delta encoding
+  - Simple-8b
+  - Run-length encoding
+* Floating point compression
+  - XOR-based compression
+* Type-agnostic compression
+  - Dictionary compression
+  - Bitmap encoding
+
+---
+
+# Delta encoding
+
+![center h:280](./images/delta-encoding.png)
+
+---
+
+# Run-length encoding
+
+![center h:280](./images/run-length-encoding.png)
+
+---
+
+# Dictionary compression
+
+![center h:550](./images/dictionary-compression.png)
+
+---
+
+# Bitmap encoding
+
+![center h:450](./images/bitmap-encoding.png)
