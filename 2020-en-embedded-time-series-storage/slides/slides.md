@@ -67,10 +67,23 @@ table td {
 
 ![h:80](./images/imdg-logo.jpg)
 
+https://hazelcast.org
+
+* Hazelcast In-Memory Data Grid (IMDG)
+* Open-source distributed in-memory object store
+* Supports a variety of data structures such as Map, Set, List, and so on
+* Implemented in Java
+* Supports embedded и standalone modes
+* Has client libraries for many languages and platforms
+
+---
+
+![h:80](./images/imdg-logo.jpg)
+
 * Hazelcast IMDG Management Center (MC)
 * Monitoring & management application for IMDG clusters
 * Supports stand-alone and servlet container deployment
-* Self-contained application, i.e. .jar file and Java is everything you need to run MC
+* Self-contained application, i.e. .jar file and Java is everything you need
 * Frontend part is built with TypeScript, React and Redux
 * Backend part is built with Java, Spring and IMDG Java client
 
@@ -447,8 +460,23 @@ RocksDB won the battle in the end.
 |:---|--:|--:|--:|
 | Const&nbsp;`long`&nbsp;(1&nbsp;sec) | 480 | 12 | x40 |
 | Const&nbsp;`long`&nbsp;(3&nbsp;sec) | 160 | 19 | x8.4 |
-| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<1000) | 160 | 56 | x2.9 |
+| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<`byte`) | 160 | 55 | x2.9 |
+| Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<`short`) | 160 | 93 | x1.7 |
 | Random&nbsp;`long`&nbsp;(3&nbsp;sec) | 160 | 170 | x0.9 |
+
+---
+
+# Disk cost of each data point
+
+| | Cost&nbsp;(bytes) |
+|:---|--:|
+| Raw | 16* |
+| Metric&nbsp;Storage | 5.25** |
+| Prometheus | 3.3 |
+| Gorilla | 1.37 |
+
+\* Binary size of timestamp + value
+\*\* We consider "Inc&nbsp;`long`&nbsp;(3&nbsp;sec;&nbsp;<`short`)" scenario
 
 ---
 
@@ -457,20 +485,39 @@ RocksDB won the battle in the end.
 * Data retention
   - Based on per entry time-to-live (TTL) in RocksDB
 * Data durability
-  - Pending minute buckets are persisted on graceful shutdown
+  - Pending minute buckets are flushed to disk on graceful shutdown
 * Aggregation API
   - Built on top of the storage
 
 ---
 
-# Design restrictions
+# Design restrictions #1
 
-* Insufficient in-memory cache size scenario
-  - Potential solution: adapt the size dynamically
-* Loss of last minute data on force shutdown
-  - Potential solution: additional WAL or flush data on more frequent checkpoints
-* Out of order writes (>1 minute time window)
-  - Potential solution: merge buckets during background persistence
+Problem:
+Data point loss when in-memory cache size is insufficient
+
+Potential solution:
+Adapt the size dynamically
+
+---
+
+# Design restrictions #2
+
+Problem:
+Loss of last minute data on force shutdown
+
+Potential solution:
+Additional WAL or flush data on more frequent checkpoints
+
+---
+
+# Design restrictions #3
+
+Problem:
+Out of order writes (>1 minute time window)
+
+Potential solution:
+Merge buckets during background persistence
 
 ---
 
