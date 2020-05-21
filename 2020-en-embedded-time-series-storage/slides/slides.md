@@ -249,6 +249,8 @@ IMDG v4.0+ is capable of reporting collected metrics (probes) to MC in<br/>a gen
 
 ---
 
+<!-- TODO add a slide with overall data flow diagram before this one -->
+
 # The challenge
 
 * MC has to store those metrics somehow
