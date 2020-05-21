@@ -343,7 +343,7 @@ After initial research and experiments we decided the following:
 
 ---
 
-# Primitive data layout
+# Primitive key-value layout
 
 ![center](./images/primitive-key-value-layout.png)
 
@@ -390,7 +390,7 @@ RocksDB won the battle in the end.
 
 ---
 
-# Bucketed data layout
+# Bucketed key-value layout
 
 ![center](./images/bucketed-key-value-layout.png)
 
