@@ -235,7 +235,7 @@ section h1 {
 # The problem
 
 * In the past IMDG clusters were reporting their metrics as a large JSON object
-* MC was storing collected JSONs into a key-value storage<br/>(in-memory and/or JDBM)
+* MC was storing collected JSONs into a key-value storage (in-memory<br/>and/or JDBM)
 * Such approach has some downsides that are critical for us
 * Say, it requires changes in many places when we had to add new metrics
 
@@ -269,6 +269,7 @@ IMDG v4.0+ is capable of reporting collected metrics (probes) to MC in<br/>a gen
 
 # Requirements - nice to haves
 
+* Aggregation API
 * Good write performance (100Ks data points/second on average HW)
 * Good enough read performance (10Ks data points/second on average HW)
 * Use existing stable SW, when possible
