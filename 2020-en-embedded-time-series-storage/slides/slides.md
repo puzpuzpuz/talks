@@ -190,6 +190,34 @@ Time series data (usually) implies:
 
 ---
 
+# Storage formats*
+
+* Column-oriented storage
+* Log-structured merge-tree (LSM tree)
+* B-tree
+* Their variations and combinations
+
+\* See bonus slides
+
+---
+
+# Data compression*
+
+* Integer compression
+  - Delta encoding
+  - Delta-of-delta encoding
+  - Simple-8b
+  - Run-length encoding
+* Floating point compression
+  - XOR-based compression
+* Type-agnostic compression
+  - Dictionary compression
+  - Bitmap encoding
+
+\* See bonus slides
+
+---
+
 <style scoped>
 section h1 {
   position: absolute;
@@ -207,7 +235,7 @@ section h1 {
 # The problem
 
 * In the past IMDG clusters were reporting their metrics as a large JSON object
-* MC was storing collected JSONs into a key-value storage (in-memory and/or JDBM)
+* MC was storing collected JSONs into a key-value storage<br/>(in-memory and/or JDBM)
 * Such approach has some downsides that are critical for us
 * Say, it requires changes in many places when we had to add new metrics
 
@@ -215,7 +243,7 @@ section h1 {
 
 # The solution
 
-IMDG v4.0+ is capable of reporting collected metrics (probes) to MC in a generic manner
+IMDG v4.0+ is capable of reporting collected metrics (probes) to MC in<br/>a generic manner
 
 ![h:400 center drop-shadow](./images/jmx-metrics.png)
 
@@ -566,15 +594,6 @@ section h1 {
 
 ---
 
-# Bonus 1: storage formats
-
-* Column-oriented storage
-* Log-structured merge-tree (LSM tree)
-* B-tree
-* Their variations and combinations
-
----
-
 # Column-oriented storage
 
 ![center](./images/column-oriented-storage.png)
@@ -584,21 +603,6 @@ section h1 {
 # LSM tree
 
 ![center h:600](./images/lsm-tree.png)
-
----
-
-# Bonus 2: data compression
-
-* Integer compression
-  - Delta encoding
-  - Delta-of-delta encoding
-  - Simple-8b
-  - Run-length encoding
-* Floating point compression
-  - XOR-based compression
-* Type-agnostic compression
-  - Dictionary compression
-  - Bitmap encoding
 
 ---
 
