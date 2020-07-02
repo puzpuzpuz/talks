@@ -2,29 +2,28 @@
 'use strict';
 
 class FileStream {
-  static _cleanUp(holdings) {
-    for (const file of holdings) {
-      console.error(`File leaked: ${file}!`);
-    }
+  static #cleanUp(heldValue) {
+    console.error(`File leaked: ${file}!`);
   }
 
-  static _registry = new FinalizationRegistry(this._cleanUp);
-  _file;
+  static #finalizationGroup = new FinalizationRegistry(FileStream.#cleanUp);
+
+  #file;
 
   constructor(fileName) {
-    this._file = new File(fileName);
-    FileStream._registry.register(this, this._file, this);
+    this.#file = new File(fileName);
+    FileStream.#finalizationGroup.register(this, this.#file, this);
     // eagerly trigger async read of file contents into this.data
   }
 
   close() {
-    FileStream._registry.unregister(this);
-    File.close(this._file);
+    FileStream.#finalizationGroup.unregister(this);
+    File.close(this.#file);
     // other cleanup
   }
 
   async *[Symbol.iterator]() {
-    // read data from this._file
+    // read data from this.#file
   }
 }
 

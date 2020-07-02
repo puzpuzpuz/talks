@@ -49,7 +49,8 @@ table td {
 
 # О докладчике
 
-* Пишу на Java (10+ лет), Node.js (5+ лет)
+* Пишу на Java (очень долго), Node.js (долго)
+* Node.js core collaborator
 * Интересы: веб, архитектура, распределенные системы, производительность
 * Можно найти тут:
 
@@ -169,7 +170,7 @@ console.log('baz: ', foo.bar);
 
 * Во многих языках есть другие виды ссылок
 * Например, слабые ссылки (weak reference)
-* *Оффтопик*. В ARC слабые ссылки особенно важны
+* *Оффтопик*. В tracing (и ARC) слабые ссылки особенно важны
 
 ```javascript
 let baz = { answer: 42 };
@@ -235,30 +236,18 @@ if (fooBar !== undefined) {
 
 ---
 
-# Особенность WeakRef'ов
-
-*Фрагмент proposal*:
-
-The WeakRefs proposal guarantees that multiple calls to WeakRef.prototype.deref() return the same result within a certain timespan: either all should return `undefined`, or all should return the object.
-
-In HTML, this timespan runs until a microtask checkpoint, where HTML performs a microtask checkpoint when the JavaScript execution stack becomes empty, after all `Promise` reactions have run.
-
----
-
 # FinalizationRegistry
 
 ```javascript
-function cleanUp(holdings) {
-  for (const i of holdings) {
-    console.log(i);
-  }
+function cleanUp(heldValue) {
+  console.log(heldValue);
 }
 
 const fr = new FinalizationRegistry(cleanUp);
 const obj = {};
 fr.register(obj, 42);
 
-// после того, как obj собран
+// после того, как obj собран:
 // 42
 ```
 
@@ -269,6 +258,7 @@ fr.register(obj, 42);
 * Время сборки мусора непредсказуемо
 * Разные JS движки могут вести себя по-разному
 * Финализаторы - нишевая штука, которую стоит избегать в большинстве случаев
+* Слабые ссылки тоже нишевая штука, но иногда может пригодиться
 
 ---
 
@@ -277,6 +267,7 @@ fr.register(obj, 42);
 * Сейчас спецификация на stage 3 в TC39 (предпоследний шаг)
 * https://github.com/tc39/proposal-weakrefs
 * Можно щупать в Node.js v12+ (и V8) с флагом `--harmony-weak-refs`
+* Оба API доступны без флага в V8 v8.4: https://v8.dev/blog/v8-release-84
 
 ---
 
@@ -420,10 +411,7 @@ Buffer.allocUnsafe = function allocUnsafe(size) {
 # Что в итоге?
 
 * Мы (Hazelcast) помешаны на производительности 🙂
-* Эксперимент с Buffer pool, скорее всего, продолжится:
-  - Manual alloc/free
-  - Buddy & slab allocator algorithms
-  - Прочие шалости
+* Поэтому эксперимент с Buffer pool, скорее всего, продолжится
 
 ---
 

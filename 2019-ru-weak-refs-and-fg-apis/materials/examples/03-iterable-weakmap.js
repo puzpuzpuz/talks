@@ -2,14 +2,12 @@
 'use strict';
 
 class IterableWeakMap {
-    _weakMap = new WeakMap();
-    _refSet = new Set();
-    _registry = new FinalizationRegistry(IterableWeakMap._cleanup);
+    #weakMap = new WeakMap();
+    #refSet = new Set();
+    #finalizationGroup = new FinalizationRegistry(IterableWeakMap.#cleanup);
 
-    static _cleanup(iterator) {
-        for (const { set, ref } of iterator) {
-            set.delete(ref);
-        }
+    static #cleanup({ set, ref }) {
+        set.delete(ref);
     }
 
     constructor(iterable) {
@@ -21,36 +19,36 @@ class IterableWeakMap {
     set(key, value) {
         const ref = new WeakRef(key);
 
-        this._weakMap.set(key, { value, ref });
-        this._refSet.add(ref);
-        this._registry.register(key, {
-            set: this._refSet,
+        this.#weakMap.set(key, { value, ref });
+        this.#refSet.add(ref);
+        this.#finalizationGroup.register(key, {
+            set: this.#refSet,
             ref
         }, ref);
     }
 
     get(key) {
-        const entry = this._weakMap.get(key);
+        const entry = this.#weakMap.get(key);
         return entry && entry.value;
     }
 
     delete(key) {
-        const entry = this._weakMap.get(key);
+        const entry = this.#weakMap.get(key);
         if (!entry) {
             return false;
         }
 
-        this._weakMap.delete(key);
-        this._refSet.delete(entry.ref);
-        this._registry.unregister(entry.ref);
+        this.#weakMap.delete(key);
+        this.#refSet.delete(entry.ref);
+        this.#finalizationGroup.unregister(entry.ref);
         return true;
     }
 
     *[Symbol.iterator]() {
-        for (const ref of this._refSet) {
+        for (const ref of this.#refSet) {
             const key = ref.deref();
             if (!key) continue;
-            const { value } = this._weakMap.get(key);
+            const { value } = this.#weakMap.get(key);
             yield [key, value];
         }
     }
