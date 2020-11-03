@@ -395,9 +395,15 @@ Source: https://jepsen.io/consistency
 
 ---
 
-![h:620 center](./images/linearizability.png)
+# Допустимый порядок
 
-Source: DDIA book
+![h:600 center](./images/linearizability-1.png)
+
+---
+
+# Недопустимый порядок
+
+![h:600 center](./images/linearizability-2.png)
 
 ---
 
