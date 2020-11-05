@@ -184,21 +184,27 @@ section h1 {
 
 ---
 
-# Принципиальные отличия
+# Отличия: масштабирование
 
 ![h:450 center](./images/comparison-1.png)
 
 ---
 
-# Еще принципиальные отличия
+# Отличия: работа с данными
 
 ![h:450 center](./images/comparison-2.png)
 
 ---
 
-# А еще?
+# Отличия: вероятность отказа
 
 ![h:450 center](./images/comparison-3.png)
+
+---
+
+# Отличия: критичность отказа
+
+![h:450 center](./images/comparison-4.png)
 
 ---
 
@@ -509,12 +515,35 @@ section h1 {
 
 ---
 
-# Верификация корректности (неполный список вариантов)
+# Верификация корректности: теория
 
-* TLA+ (L.Lamport) - теория
-* Jepsen (K.Kingsbury) - практика
+* [TLA+](https://lamport.azurewebsites.net/tla/tla.html) (L.Lamport)
+* Язык для моделирования программ и систем, распределенных и не только
 
-<!-- разбить и добавить фоток -->
+```
+EXTENDS TLC
+
+(* --algorithm hello_world
+variable s \in {"Hello", "World!"};
+begin
+  A:
+    print s;
+end algorithm; *)
+```
+
+---
+
+# Верификация корректности: практика
+
+* [Jepsen](https://github.com/jepsen-io/jepsen) (K.Kingsbury a.k.a. aphyr)
+
+```
+INFO  jepsen.core - Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻
+```
+
+<br/>
+
+![h:250 center](./images/kkingsbury.png)
 
 ---
 
