@@ -414,16 +414,6 @@ Source: https://jepsen.io/consistency
 * Именно ее мы и подразумевали (надеюсь) ранее:
   "с клиентской стороны поведение должно быть, как если бы это была централизованная система"
 
-<!--
-# Eventual consistency
-
-Система гарантирует, что данные будут доступны на всех узлах через какое-то (неопределенное) время после завершения операций записи
-
-# Monotonic reads
-
-Система гарантирует, что если какой-то (конкретный) клиент читает запись, последовательные чтения той же записи вернут то же самое, или более познее значение
--->
-
 ---
 
 # Неформальное определение linearizability
@@ -435,13 +425,25 @@ Source: https://jepsen.io/consistency
 
 # Допустимый порядок
 
-![h:600 center](./images/linearizability-1.png)
+![h:600 center](./images/linearizability-valid-1.png)
+
+---
+
+# Допустимый порядок
+
+![h:600 center](./images/linearizability-valid-2.png)
+
+---
+
+# Допустимый порядок
+
+![h:600 center](./images/linearizability-valid-3.png)
 
 ---
 
 # Недопустимый порядок
 
-![h:600 center](./images/linearizability-2.png)
+![h:600 center](./images/linearizability-invalid.png)
 
 ---
 
@@ -475,7 +477,9 @@ section h1 {
 
 Network partition - сценарий, когда узлы продолжают функционировать, но некоторые из них не могут общаться между собой
 
-<!-- Добавить картинку в тему -->
+<br/>
+
+![h:300 center](./images/network-partition.png)
 
 ---
 
