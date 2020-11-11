@@ -58,6 +58,8 @@ table td {
   - https://github.com/puzpuzpuz
   - https://medium.com/@apechkurov
 
+![bg right:33% fit](./images/silly-me.png)
+
 ---
 
 ![h:80](./images/imdg-logo.jpg)
@@ -84,7 +86,7 @@ section {
 </style>
 
 * https://github.com/hazelcast/hazelcast-nodejs-client
-* P.S. А вот доклад про историю оптимизаций: https://youtu.be/CSnmpbZsVD4
+* P.S. А вот доклад про историю оптимизаций:<br/>https://youtu.be/CSnmpbZsVD4
 
 ---
 
@@ -116,14 +118,18 @@ try {
 
 ---
 
+# Как это должно работать
+
+![h:600 center](./images/ap-lock-3.png)
+
+---
+
 # Хьюстон, у нас проблема
 
 * В 2017 Kyle Kingsbury (a.k.a. aphyr) потестировал Hazelcast
 * https://jepsen.io/analyses/hazelcast-3-8-3
 
-<br/>
-
-![h:250 center](./images/kkingsbury.png)
+![bg right:33% fit](./images/kkingsbury.png)
 
 ---
 
@@ -136,6 +142,12 @@ try {
 # Как это работает в условиях network partition
 
 ![h:600 center](./images/ap-lock-partition-2.png)
+
+---
+
+# Как это работает в условиях network partition
+
+![h:600 center](./images/ap-lock-partition-3.png)
 
 ---
 
@@ -577,11 +589,7 @@ end algorithm; *)
 INFO  jepsen.core - Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻
 ```
 
-<br/>
-
-![h:250 center](./images/kkingsbury.png)
-
----
+![bg right:33% fit](./images/kkingsbury.png)
 
 ---
 
