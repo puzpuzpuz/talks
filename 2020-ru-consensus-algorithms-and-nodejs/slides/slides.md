@@ -62,6 +62,36 @@ table td {
 
 ---
 
+# Исходная задача
+
+![h:600 center](./images/ap-lock-1.png)
+
+---
+
+# Исходная задача
+
+![h:600 center](./images/ap-lock-2.png)
+
+---
+
+# Возможное решение
+
+![h:600 center](./images/ap-lock-3.png)
+
+---
+
+# Возможное решение
+
+![h:600 center](./images/ap-lock-4.png)
+
+---
+
+# Возможное решение
+
+![h:600 center](./images/ap-lock-5.png)
+
+---
+
 ![h:80](./images/imdg-logo.jpg)
 
 * Hazelcast In-Memory Data Grid (IMDG)
@@ -103,24 +133,6 @@ try {
     await lock.unlock();
 }
 ```
-
----
-
-# Как это должно работать
-
-![h:600 center](./images/ap-lock-1.png)
-
----
-
-# Как это должно работать
-
-![h:600 center](./images/ap-lock-2.png)
-
----
-
-# Как это должно работать
-
-![h:600 center](./images/ap-lock-3.png)
 
 ---
 
@@ -772,6 +784,39 @@ https://github.com/gryadka/js (Node.js - proposers, Redis - acceptors)
 https://github.com/puzpuzpuz/ogorod (Node.js - proposers & acceptors)
 
 P.S. Ура! Наконец-то дошли до Node.js! 🐢
+
+---
+
+# Ogorod
+
+* 558 строк кода
+* И proposers, и acceptors живут в одном экземпляре Node.js
+* Данные хранятся in-memory
+* Внешняя и внутренняя коммуникация - HTTP
+
+---
+
+# Пример использования
+
+```bash
+$ curl -X PUT http://localhost:8080/api/test \
+  -H "Content-Type: application/json" \
+  -d '{"foo":"bar"}'
+
+{"version":0,"value":{"foo":"bar"}}
+```
+
+---
+
+# Пример использования
+
+```bash
+$ curl -X POST http://localhost:8080/api/test/cas \
+  -H "Content-Type: application/json" \
+  -d '{"version":0,"value":{"foo":"bar"}}'
+
+{"version":1,"value":{"bar":"baz"}}
+```
 
 ---
 
