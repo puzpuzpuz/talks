@@ -78,7 +78,6 @@ table td {
   - Особенности реализации
   - Сложность
   - Память
-  - Map vs Object
 * WeakMap/WeakSet
   - TODO
 
@@ -133,17 +132,33 @@ set.forEach((item) => {
 
 ---
 
-# Хеш-таблица
+# Хеш-функция
 
-TODO
-
-Упомянуть load factor
+![w:640 center](./images/hash-functions.png)
 
 ---
 
-# Хеш-функция
+# Пустая хеш-таблица
 
-TODO
+![w:1000 center](./images/hash-table-1.png)
+
+---
+
+# Вставка
+
+![w:1000 center](./images/hash-table-2.png)
+
+---
+
+# Результат вставки
+
+![w:1000 center](./images/hash-table-3.png)
+
+---
+
+# Обработка коллизий
+
+![w:1000 center](./images/hash-table-4.png)
 
 ---
 
@@ -312,7 +327,7 @@ section h1 {
 
 # Проверим-ка!
 
-![h:500 center](./images/demo.png)
+![w:700 center](./images/demo.png)
 
 ---
 
@@ -350,18 +365,50 @@ section h1 {
 
 ---
 
-локализовать картинку
-https://miro.medium.com/max/2880/1*lrmWw6cULyCZ6sRmXnsZyQ.png
+# Как Map/Set хранятся в памяти?
+
+```ts
+interface CloseTable {
+    hashTable: number[];
+    dataTable: Entry[];
+    nextSlot: number;
+    size: number;
+}
+```
+
+---
+
+С точки зрения хранения данных в куче V8 Map/Set это всего лишь массивы
+
+P.S. Отсюда следуют упомянутые ограничения на размеры
+
+---
+
+![w:1000 center](./images/map-memory-layout-1.png)
+
+---
+
+![w:1000 center](./images/map-memory-layout-2.png)
+
+---
+
+![w:1000 center](./images/map-memory-layout-3.png)
+
+---
+
+![w:1000 center](./images/map-memory-layout-4.png)
 
 ---
 
 # Немного арифметики
 
-Размер массива можно оценить как `N*3.5`, где `N` - емкость Map
+Размер массива можно оценить примерно как:
+* `N*3.5`, где `N` - емкость Map
+* `N*2.5`, где `N` - емкость Set
 
 ---
 
-# Еще немного арифметики
+# Входные условия
 
 Для 64-битной системы (без учета [pointer compression](https://v8.dev/blog/pointer-compression)) каждый элемент массива занимает 8 байтов
 
@@ -369,23 +416,8 @@ https://miro.medium.com/max/2880/1*lrmWw6cULyCZ6sRmXnsZyQ.png
 
 # Итого
 
-Map с 2²⁰ (~1 млн.) пар займет ~29MB памяти
-
----
-
-<style scoped>
-section h1 {
-  position: absolute;
-  top: 261px;
-  left: 90px;
-}
-</style>
-
-![bg](./images/hazelcast-bg-no-logo.jpg)
-
-# Map/Set: Map vs Object
-
-TODO
+* Map с 2²⁰ (~1 млн.) пар займет ~29MB памяти
+* Set с 2²⁰ (~1 млн.) элементов займет ~21MB памяти
 
 ---
 
@@ -404,3 +436,30 @@ TODO WeakMap/WeakSet
 
 * https://itnext.io/v8-deep-dives-understanding-map-internals-45eb94a183df
 * http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# Bonus unlocked 🏅🏅🏅
+
+---
+
+# Map/Set: Map vs Object
+
+|                          | Object | Map |
+|--------------------------|--------|-----|
+| Заранее известная структура | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✔️ | |
+| Гарантированный&nbsp;порядок&nbsp;обхода | | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✔️* |
+| Ключи&nbsp;произвольного&nbsp;типа | | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✔️ |
+| Предсказуемая&nbsp;производительность при частых вставках/удалениях | | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;✔️ |
+
+\* С недавних пор (ES 2015, 2020) у объектов порядок обхода тоже гарантирован, но правила обхода сложнее
