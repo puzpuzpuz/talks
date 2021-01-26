@@ -199,11 +199,7 @@ interface CloseTable {
     nextSlot: number;
     size: number;
 }
-```
 
----
-
-```ts
 interface Entry {
     key: any;
     value: any;
@@ -213,74 +209,55 @@ interface Entry {
 
 ---
 
-```js
-// пусть хеш-функция:
-// function hashCode(n) { return n; }
-table.set(0, 'a'); // => bucket 0 (0 % 2)
-table.set(1, 'b'); // => bucket 1 (1 % 2)
-table.set(2, 'c'); // => bucket 0 (2 % 2)
-```
+![w:900 center](./images/close-table-1.png)
 
 ---
 
-```js
-const tableInternals = {
-    hashTable: [0, 1],
-    dataTable: [
-        {
-            key: 0,
-            value: 'a',
-            chain: 2 // индекс <2, 'c'>
-        },
-        {
-            key: 1,
-            value: 'b',
-            chain: -1 // -1 значит хвост
-        },
-        {
-            key: 2,
-            value: 'c',
-            chain: -1
-        },
-        // пустой слот
-    ],
-    nextSlot: 3, // индекс пустого слота
-    size: 3
-}
-```
+![w:900 center](./images/close-table-2.png)
 
 ---
 
-```js
-// table.delete(0)
-const tableInternals = {
-    hashTable: [0, 1],
-    dataTable: [
-        {
-            key: undefined, // удаленный элемент
-            value: undefined,
-            chain: 2 
-        },
-        {
-            key: 1,
-            value: 'b',
-            chain: -1
-        },
-        {
-            key: 2,
-            value: 'c',
-            chain: -1
-        },
-        // пустой слот
-    ],
-    nextSlot: 3,
-    size: 2 // новый размер
-}
-```
+![w:900 center](./images/close-table-3.png)
 
 ---
 
-TODO нарисовать картинки и описать перехеширование
+![w:900 center](./images/close-table-4.png)
+
+---
+
+![w:900 center](./images/close-table-5.png)
+
+---
+
+![w:900 center](./images/close-table-6.png)
+
+---
+
+![w:900 center](./images/close-table-7.png)
+
+---
+
+![w:900 center](./images/close-table-8.png)
+
+---
+
+![w:900 center](./images/close-table-9.png)
+
+---
+
+![w:900 center](./images/close-table-10.png)
+
+---
+
+![w:900 center](./images/close-table-11.png)
+
+---
+
+![w:900 center](./images/close-table-12.png)
+
+---
+
+![w:900 center](./images/close-table-13.png)
 
 ---
 
