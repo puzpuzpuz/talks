@@ -209,55 +209,55 @@ interface Entry {
 
 ---
 
-![w:900 center](./images/close-table-1.png)
+![w:1000 center](./images/close-table-1.png)
 
 ---
 
-![w:900 center](./images/close-table-2.png)
+![w:1000 center](./images/close-table-2.png)
 
 ---
 
-![w:900 center](./images/close-table-3.png)
+![w:1000 center](./images/close-table-3.png)
 
 ---
 
-![w:900 center](./images/close-table-4.png)
+![w:1000 center](./images/close-table-4.png)
 
 ---
 
-![w:900 center](./images/close-table-5.png)
+![w:1000 center](./images/close-table-5.png)
 
 ---
 
-![w:900 center](./images/close-table-6.png)
+![w:1000 center](./images/close-table-6.png)
 
 ---
 
-![w:900 center](./images/close-table-7.png)
+![w:1000 center](./images/close-table-7.png)
 
 ---
 
-![w:900 center](./images/close-table-8.png)
+![w:1000 center](./images/close-table-8.png)
 
 ---
 
-![w:900 center](./images/close-table-9.png)
+![w:1000 center](./images/close-table-9.png)
 
 ---
 
-![w:900 center](./images/close-table-10.png)
+![w:1000 center](./images/close-table-10.png)
 
 ---
 
-![w:900 center](./images/close-table-11.png)
+![w:1000 center](./images/close-table-11.png)
 
 ---
 
-![w:900 center](./images/close-table-12.png)
+![w:1000 center](./images/close-table-12.png)
 
 ---
 
-![w:900 center](./images/close-table-13.png)
+![w:1000 center](./images/close-table-13.png)
 
 ---
 
@@ -285,20 +285,22 @@ section h1 {
 # Емкость
 
 * Емкость это всегда степерь двойки
-* Load factor равен 2 => емкость === 2 * кол_во_бакетов
+* Коэффициент заполнения равен 2
+  - Емкость равна 2 * кол_во_ячеек
 
 ---
 
 # Границы
 
-* Начальная емкость: `new Map()` содержит 2 бакета (емкость равна 4)
-* Максимальная емкость: на 64-битной системе емкость Map ограничена 2²⁷ (~16.7 млн. пар)
+* Начальная емкость: `new Map()` содержит 2 ячейки (емкость равна 4)
+* Максимальная емкость: на 64-битной системе емкость Map ограничена 2²⁷ (~16.7 млн.  пар)
 
 ---
 
 # Перехеширование
 
 * Множитель при перехешировании тоже 2
+  - Таблица увеличивается/уменьшается в 2 раза
 
 ---
 
@@ -322,9 +324,16 @@ section h1 {
 
 ---
 
-TODO
+# Big O
 
-Перечислить в таблице (упомянуть перехеширование)
+|            | В среднем случае | В худшем случае |
+|------------|------------------|-----------------|
+| Поиск      | O(1)             | O(n)            |
+| Вставка*   | O(1)             | O(n)            |
+| Удаление** | O(1)             | O(n)            |
+
+\* Может привести к увеличению таблицы
+\** Может привести к уменьшению таблицы
 
 ---
 
