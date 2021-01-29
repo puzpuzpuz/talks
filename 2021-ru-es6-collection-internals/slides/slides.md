@@ -60,43 +60,6 @@ table td {
 
 ---
 
-# Disclamer
-
-* Изложение основано на V8 8.4, Node.js [commit 238104c](https://github.com/nodejs/node/commit/238104c531219db05e3421521c305404ce0c0cce)
-* Полагаться можно (и нужно) только на спецификацию ECMAScript
-* Автор не работает в команде V8
-
----
-
-<!-- TODO update -->
-
-# План на сегодня
-
-* Немного истории
-* Map/Set
-  - Алгоритм
-  - Особенности реализации
-  - Сложность
-  - Память
-* WeakMap/WeakSet
-  - TODO
-
----
-
-<style scoped>
-section h1 {
-  position: absolute;
-  top: 261px;
-  left: 90px;
-}
-</style>
-
-![bg](./images/hazelcast-bg-no-logo.jpg)
-
-# Немного истории
-
----
-
 [ECMAScript 2015](https://262.ecma-international.org/6.0/) (ES6) привнес в JS стандартные коллекции:
   - Map
   - Set
@@ -129,6 +92,41 @@ set.forEach((item) => {
 ---
 
 ![w:1000 center](./images/maps-in-java.png)
+
+---
+
+# Disclamer
+
+* Изложение основано на V8 8.4, Node.js [commit 238104c](https://github.com/nodejs/node/commit/238104c531219db05e3421521c305404ce0c0cce)
+* Полагаться можно (и нужно) только на спецификацию ECMAScript
+* Автор не работает в команде V8
+
+---
+
+# План на сегодня
+
+* Map/Set
+  - Алгоритм
+  - Особенности реализации
+  - Сложность
+  - Память
+* WeakMap/WeakSet
+  - Отличия от Map + WeakRef
+  - Особенности реализации
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# Map/Set: алгоритм
 
 ---
 
@@ -171,20 +169,6 @@ set.forEach((item) => {
 > When the forEach method is called with one or two arguments, the following steps are taken:
 > ...
 > 7. Repeat for each Record {[[key]], [[value]]} e that is an element of entries, in original key **insertion order**
-
----
-
-<style scoped>
-section h1 {
-  position: absolute;
-  top: 261px;
-  left: 90px;
-}
-</style>
-
-![bg](./images/hazelcast-bg-no-logo.jpg)
-
-# Map/Set: алгоритм
 
 ---
 
@@ -407,13 +391,60 @@ P.S. Отсюда следуют упомянутые ограничения н�
 
 ---
 
-TODO WeakMap/WeakSet
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# WeakMap/WeakSet: отличия от Map + WeakRef
+
+---
+
+TODO
+
+---
+
+<style scoped>
+section h1 {
+  position: absolute;
+  top: 261px;
+  left: 90px;
+}
+</style>
+
+![bg](./images/hazelcast-bg-no-logo.jpg)
+
+# WeakMap/WeakSet: особенности реализации
+
+---
+
+* WeakMap/WeakSet:
+  - [EphemeronHashTable](https://github.com/nodejs/node/blob/238104c531219db05e3421521c305404ce0c0cce/deps/v8/src/objects/hash-table.h#L378)
+  - [MarkingVisitorBase::VisitEphemeronHashTable](https://github.com/nodejs/node/blob/238104c531219db05e3421521c305404ce0c0cce/deps/v8/src/heap/marking-visitor-inl.h#L258)
+  - [MarkCompactCollector::ProcessEphemeronsUntilFixpoint, ProcessEphemeronsLinear, ProcessEphemeron](https://github.com/nodejs/node/blob/238104c531219db05e3421521c305404ce0c0cce/deps/v8/src/heap/mark-compact.cc)
+* WeakRef:
+  - [MarkingVisitorBase::VisitJSWeakRef](https://github.com/nodejs/node/blob/238104c531219db05e3421521c305404ce0c0cce/deps/v8/src/heap/marking-visitor-inl.h#L297)
+  - [MarkCompactCollector::ClearJSWeakRefs](https://github.com/nodejs/node/blob/238104c531219db05e3421521c305404ce0c0cce/deps/v8/src/heap/mark-compact.cc#L2472)
+
+---
+
+# Что же такое WeakMap/WeakSet?
+
+Формально - "классическая" хеш-таблица с открытой адресацией и квадратичным пробированием
+
+---
+
+TODO 
 
 ---
 
 # Спасибо за внимание!
 
-<!-- TODO update -->
 ![w:400 center](./images/slides-qr-code.png)
 
 ---
@@ -422,6 +453,7 @@ TODO WeakMap/WeakSet
 
 * https://itnext.io/v8-deep-dives-understanding-map-internals-45eb94a183df
 * http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf
+* https://v8.dev/blog/concurrent-marking
 
 ---
 
