@@ -111,7 +111,7 @@ set.forEach((item) => {
   - Сложность
   - Память
 * WeakMap/WeakSet
-  - Отличия от Map + WeakRef
+  - Алгоритм
   - Особенности реализации
 
 ---
@@ -401,11 +401,17 @@ section h1 {
 
 ![bg](./images/hazelcast-bg-no-logo.jpg)
 
-# WeakMap/WeakSet: отличия от Map + WeakRef
+# WeakMap/WeakSet: алгоритм
 
 ---
 
-TODO
+![w:1000 center](./images/weak-ref.png)
+
+---
+
+Почему бы не взять Map + WeakRef* в основу WeakMap?
+
+\* Речь о ключах, но для значений тоже есть нюансы
 
 ---
 
