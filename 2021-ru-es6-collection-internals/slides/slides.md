@@ -405,13 +405,77 @@ section h1 {
 
 ---
 
-![w:1000 center](./images/weak-ref.png)
+![w:1024 center](./images/weak-ref.png)
 
 ---
 
-Почему бы не взять Map + WeakRef* в основу WeakMap?
+# Внимание, вопрос
 
-\* Речь о ключах, но для значений тоже есть нюансы
+Так почему бы не взять Map + WeakRef в основу WeakMap?
+
+---
+
+![w:1024 center](./images/weak-hash-map-1.png)
+
+---
+
+![w:1024 center](./images/weak-hash-map-2.png)
+
+---
+
+![w:1024 center](./images/weak-hash-map-3.png)
+
+---
+
+![w:1024 center](./images/weak-hash-map-4.png)
+
+---
+
+# Внимание, ответ
+
+На помощь спешит механизм [ephemeron](https://en.wikipedia.org/wiki/Ephemeron)*.
+
+\* Справка: можно встретить в Lua и .NET.
+
+---
+
+![h:600 center](./images/ephemeron-references.png)
+
+---
+
+# Начнем издалека
+
+В основе GC в V8 - трёхцветный (tri-color) [алгоритм](https://dl.acm.org/doi/10.1145/359642.359655) отметки (Э.В. Дейкстра, 1978г.).
+
+---
+
+![h:600 center](./images/tricolor-marking-1.png)
+
+---
+
+![h:600 center](./images/tricolor-marking-2.png)
+
+---
+
+![h:600 center](./images/tricolor-marking-3.png)
+
+---
+
+# Есть белые пятна
+
+Как сборщик обрабатывает ephemeron'ы?
+
+---
+
+![h:600 center](./images/ephemeron-marking-1.png)
+
+---
+
+![h:600 center](./images/ephemeron-marking-2.png)
+
+---
+
+TODO brief pseudo code for the algo
 
 ---
 
@@ -441,11 +505,14 @@ section h1 {
 
 # Что же такое WeakMap/WeakSet?
 
-Формально - "классическая" хеш-таблица с открытой адресацией и квадратичным пробированием
+Формально - "классическая" хеш-таблица с открытой адресацией и квадратичным пробированием.
 
 ---
 
-TODO 
+# "Цена" WeakMap/WeakSet
+
+* Когда нет циклов, WeakMap/WeakSet равнозначны Map + WeakRef.
+* Когда циклы есть, стоимость возрастает (вплоть до квадратичной).
 
 ---
 
