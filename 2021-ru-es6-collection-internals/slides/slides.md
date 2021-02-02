@@ -475,7 +475,41 @@ section h1 {
 
 ---
 
-TODO brief pseudo code for the algo
+```js
+function convergeEphemerons(queue) {
+  while (true) {
+    let changed = false;
+
+    for (const weakMap of queue) {
+      if (traverseEphemeron(weakMap)) {
+        changed = true;
+        // tri-color marking для помеченных значений
+        propagateAll(/*...*/);
+      }
+    }
+
+    if (!changed) break;
+  }
+}
+```
+
+---
+
+```js
+function traverseEphemeron(weakMap) {
+  let marked = false;
+
+  // прим.: такого публичного API не существует
+  for (let [key, value] of weakMap) {
+    if (isMarked(key)) {
+      mark(value);
+      marked = true;
+    }     
+  }
+
+  return marked;
+}
+```
 
 ---
 
