@@ -190,6 +190,10 @@ section h1 {
 
 V8 реализует [deterministic hash table](https://wiki.mozilla.org/User:Jorend/Deterministic_hash_tables) (Tyler Close)
 
+---
+
+# Deterministic hash table
+
 ```java
 interface CloseTable {
     hashTable: number[];
@@ -362,9 +366,9 @@ interface CloseTable {
 
 ---
 
-С точки зрения хранения данных в куче V8 Map/Set это всего лишь массивы
+С точки зрения хранения данных в куче V8 Map/Set это JS массивы
 
-P.S. Отсюда следуют упомянутые ограничения на размеры
+P.S. Отсюда следует ограничение на размеры
 
 ---
 
@@ -439,19 +443,27 @@ section h1 {
 
 ---
 
-![w:1024 center](./images/weak-hash-map-1.png)
+# Map + WeakRef
+
+![w:850 center](./images/weak-hash-map-1.png)
 
 ---
 
-![w:1024 center](./images/weak-hash-map-2.png)
+# Map + WeakRef: поведение при GC
+
+![w:850 center](./images/weak-hash-map-2.png)
 
 ---
 
-![w:1024 center](./images/weak-hash-map-3.png)
+# Map + WeakRef: проблема
+
+![w:850 center](./images/weak-hash-map-3.png)
 
 ---
 
-![w:1024 center](./images/weak-hash-map-4.png)
+# Map + WeakRef: еще проблема
+
+![w:850 center](./images/weak-hash-map-4.png)
 
 ---
 
@@ -463,7 +475,9 @@ section h1 {
 
 ---
 
-![h:600 center](./images/ephemeron-references.png)
+# Ephemeron это пара
+
+![w:700 center](./images/ephemeron-references.png)
 
 ---
 
@@ -473,13 +487,19 @@ section h1 {
 
 ---
 
+# Tricolor marking
+
 ![h:600 center](./images/tricolor-marking-1.png)
 
 ---
 
+# Tricolor marking
+
 ![h:600 center](./images/tricolor-marking-2.png)
 
 ---
+
+# Tricolor marking
 
 ![h:600 center](./images/tricolor-marking-3.png)
 
@@ -491,9 +511,13 @@ section h1 {
 
 ---
 
+# Обработка ephemeron
+
 ![h:600 center](./images/ephemeron-marking-1.png)
 
 ---
+
+# Обработка ephemeron
 
 ![h:600 center](./images/ephemeron-marking-2.png)
 
@@ -563,14 +587,15 @@ section h1 {
 
 # Что же такое WeakMap/WeakSet?
 
-Формально - "классическая" хеш-таблица с открытой адресацией и квадратичным пробированием.
+Формально - "классическая" хеш-таблица с открытой адресацией и квадратичным пробированием
 
 ---
 
 # "Цена" WeakMap/WeakSet
 
-* Когда нет циклов, WeakMap/WeakSet равнозначны Map + WeakRef.
-* Когда циклы есть, стоимость возрастает (вплоть до квадратичной).
+* Когда нет циклов, WeakMap/WeakSet равнозначны Map + WeakRef
+* Когда циклы есть, стоимость GC возрастает (вплоть до квадратичной)
+  - С другой стороны, Map + WeakRef не может обработать циклы
 
 ---
 
