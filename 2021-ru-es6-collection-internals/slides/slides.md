@@ -136,33 +136,16 @@ section h1 {
 
 ---
 
-# Пустая хеш-таблица
+# Классическая хеш-таблица
 
-![w:1000 center](./images/hash-table-1.png)
-
----
-
-# Вставка
-
-![w:1000 center](./images/hash-table-2.png)
+* Хеш-таблица с цепочками
+* Хеш-таблица с открытой адресацией
 
 ---
 
-# Результат вставки
+# Хеш-таблица с цепочками
 
-![w:1000 center](./images/hash-table-3.png)
-
----
-
-# Обработка коллизий
-
-![w:1000 center](./images/hash-table-4.png)
-
----
-
-# Поиск
-
-![w:1000 center](./images/hash-table-5.png)
+![w:900 center](./images/hash-table.png)
 
 ---
 
@@ -188,7 +171,7 @@ section h1 {
 
 ---
 
-V8 реализует [deterministic hash table](https://wiki.mozilla.org/User:Jorend/Deterministic_hash_tables) (Tyler Close)
+V8 реализует [deterministic hash table](https://wiki.mozilla.org/User:Jorend/Deterministic_hash_tables) (Tyler Close, 2012)
 
 ---
 
@@ -465,17 +448,11 @@ section h1 {
 
 ---
 
-# Map + WeakRef: еще проблема
-
-![w:850 center](./images/weak-hash-map-4.png)
-
----
-
 # Внимание, ответ
 
-На помощь спешит механизм [ephemeron](https://en.wikipedia.org/wiki/Ephemeron)*.
+На помощь спешит механизм [ephemeron](https://en.wikipedia.org/wiki/Ephemeron)*
 
-\* Справка: можно встретить в Lua и .NET.
+\* Справка: можно встретить в Lua и .NET
 
 ---
 
@@ -487,7 +464,7 @@ section h1 {
 
 # Начнем издалека
 
-В основе GC в V8 - трёхцветный (tri-color) [алгоритм](https://dl.acm.org/doi/10.1145/359642.359655) отметки<br/>(Э.В. Дейкстра, 1978г.)
+В основе GC в V8 - трёхцветный (tri-color) [алгоритм](https://dl.acm.org/doi/10.1145/359642.359655) отметки<br/>(Э.В. Дейкстра, 1978)
 
 ---
 
@@ -560,6 +537,36 @@ function traverseEphemeron(weakMap) {
   return marked;
 }
 ```
+
+<!-- ---
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 30px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+</style>
+
+```js
+function traverseEphemeron(weakMap) {
+  let marked = false;
+
+  // прим.: такого публичного API не существует
+  for (let [key, value] of weakMap) {
+    if (isMarked(key)) {
+      mark(value);
+      marked = true;
+    }
+  }
+
+  return marked;
+}
+``` -->
 
 ---
 
@@ -637,7 +644,37 @@ section h1 {
 
 ---
 
-# Map/Set: Map vs Object
+# Пустая хеш-таблица с цепочками
+
+![w:1000 center](./images/hash-table-1.png)
+
+---
+
+# Вставка
+
+![w:1000 center](./images/hash-table-2.png)
+
+---
+
+# Результат вставки
+
+![w:1000 center](./images/hash-table-3.png)
+
+---
+
+# Обработка коллизий
+
+![w:1000 center](./images/hash-table-4.png)
+
+---
+
+# Поиск
+
+![w:1000 center](./images/hash-table-5.png)
+
+---
+
+# Map vs Object
 
 |                          | Object | Map |
 |--------------------------|--------|-----|
