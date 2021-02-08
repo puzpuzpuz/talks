@@ -263,6 +263,12 @@ interface Entry {
 
 ---
 
+# Перехеширование при увеличении таблицы
+
+![w:1000 center](./images/close-table-14.png)
+
+---
+
 <style scoped>
 section h1 {
   position: absolute;
@@ -391,8 +397,8 @@ P.S. Отсюда следует ограничение на размеры
 # Немного арифметики
 
 Размер массива можно оценить примерно как:
-* `N*3.5`, где `N` - емкость Map
-* `N*2.5`, где `N` - емкость Set
+* `3.5*N`, где `N` - емкость Map
+* `2.5*N`, где `N` - емкость Set
 
 ---
 
@@ -436,8 +442,6 @@ section h1 {
 ![w:1024 center](./images/weak-ref.png)
 
 ---
-
-# Внимание, вопрос
 
 Так почему бы не взять Map + WeakRef в основу WeakMap?
 
@@ -505,8 +509,6 @@ section h1 {
 
 ---
 
-# Есть белые пятна
-
 Как сборщик обрабатывает ephemeron'ы?
 
 ---
@@ -552,7 +554,7 @@ function traverseEphemeron(weakMap) {
     if (isMarked(key)) {
       mark(value);
       marked = true;
-    }     
+    }
   }
 
   return marked;
