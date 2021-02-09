@@ -136,8 +136,9 @@ section h1 {
 
 ---
 
-# Классическая хеш-таблица
+# "Классическая" хеш-таблица (1953)
 
+Два основных подхода к обработке коллизий:
 * Хеш-таблица с цепочками
 * Хеш-таблица с открытой адресацией
 
@@ -151,9 +152,9 @@ section h1 {
 
 # Перехеширование
 
-* При достижении определенного размера таблицу нужно перехешировать
-  - Емкость равна `коэффициент_заполнения * кол_во_ячеек`
-* Новый размер таблицы при этом: `множитель * кол_во_ячеек`
+При достижении определенного размера таблицу нужно увеличивать
+
+![w:800 center](./images/load-factor.png)
 
 ---
 
@@ -275,7 +276,7 @@ section h1 {
 
 # Емкость
 
-* Емкость это всегда степень двойки
+* Емкость Map/Set это всегда степень двойки
 * Коэффициент заполнения равен 2
   - Емкость равна `2 * кол_во_ячеек`
 
@@ -283,8 +284,8 @@ section h1 {
 
 # Границы
 
-* Начальная емкость: `new Map()` содержит 2 ячейки (емкость равна 4)
-* Максимальная емкость: на 64-битной системе емкость Map ограничена 2²⁷ (~16.7 млн.  пар)
+* Начальная емкость `new Map()` равна 4 (2 ячейки)
+* Максимальная емкость Map на 64-битной системе ограничена 2²⁷ (~16.7 млн.  пар)
 
 ---
 
@@ -522,6 +523,138 @@ function convergeEphemerons(queue) {
 
 ---
 
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 35px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 132px;
+  left: 90px;
+  content: " ";
+}
+</style>
+
+```js
+function convergeEphemerons(queue) {
+  while (true) {
+    let changed = false;
+
+    for (const weakMap of queue) {
+      if (traverseEphemeron(weakMap)) {
+        changed = true;
+        // tri-color marking для помеченных значений
+        propagateAll(/*...*/);
+      }
+    }
+
+    if (!changed) break;
+  }
+}
+```
+
+---
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 70px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 236px;
+  left: 90px;
+  content: " ";
+}
+</style>
+
+```js
+function convergeEphemerons(queue) {
+  while (true) {
+    let changed = false;
+
+    for (const weakMap of queue) {
+      if (traverseEphemeron(weakMap)) {
+        changed = true;
+        // tri-color marking для помеченных значений
+        propagateAll(/*...*/);
+      }
+    }
+
+    if (!changed) break;
+  }
+}
+```
+
+---
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 70px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 340px;
+  left: 90px;
+  content: " ";
+}
+</style>
+
+```js
+function convergeEphemerons(queue) {
+  while (true) {
+    let changed = false;
+
+    for (const weakMap of queue) {
+      if (traverseEphemeron(weakMap)) {
+        changed = true;
+        // tri-color marking для помеченных значений
+        propagateAll(/*...*/);
+      }
+    }
+
+    if (!changed) break;
+  }
+}
+```
+
+---
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 35px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 514px;
+  left: 90px;
+  content: " ";
+}
+</style>
+
+```js
+function convergeEphemerons(queue) {
+  while (true) {
+    let changed = false;
+
+    for (const weakMap of queue) {
+      if (traverseEphemeron(weakMap)) {
+        changed = true;
+        // tri-color marking для помеченных значений
+        propagateAll(/*...*/);
+      }
+    }
+
+    if (!changed) break;
+  }
+}
+```
+
+---
+
 ```js
 function traverseEphemeron(weakMap) {
   let marked = false;
@@ -538,17 +671,18 @@ function traverseEphemeron(weakMap) {
 }
 ```
 
-<!-- ---
+---
 
 <style scoped>
 section::before {
   width: 1100px;
-  height: 30px;
+  height: 35px;
   background-color: rgba(235, 225, 52, 0.1);
   border: 1px solid #73736e;
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 270px;
+  left: 90px;
+  content: " ";
 }
 </style>
 
@@ -566,7 +700,38 @@ function traverseEphemeron(weakMap) {
 
   return marked;
 }
-``` -->
+```
+
+---
+
+<style scoped>
+section::before {
+  width: 1100px;
+  height: 70px;
+  background-color: rgba(235, 225, 52, 0.1);
+  border: 1px solid #73736e;
+  position: absolute;
+  top: 306px;
+  left: 90px;
+  content: " ";
+}
+</style>
+
+```js
+function traverseEphemeron(weakMap) {
+  let marked = false;
+
+  // прим.: такого публичного API не существует
+  for (let [key, value] of weakMap) {
+    if (isMarked(key)) {
+      mark(value);
+      marked = true;
+    }
+  }
+
+  return marked;
+}
+```
 
 ---
 
