@@ -247,9 +247,13 @@ interface Entry {
 
 ---
 
+![w:1000 center](./images/close-table-14.png)
+
+---
+
 # Перехеширование при увеличении таблицы
 
-![w:1000 center](./images/close-table-14.png)
+![w:1000 center](./images/close-table-15.png)
 
 ---
 
@@ -446,6 +450,18 @@ section h1 {
 # Map + WeakRef: проблема
 
 ![w:850 center](./images/weak-hash-map-3.png)
+
+---
+
+# Map + WeakRef: пример
+
+```js
+const key = { foo: 'bar' };
+const value = { circularRef: key };
+
+const map = new WeakMap();
+map.set(key, value);
+```
 
 ---
 
@@ -792,6 +808,7 @@ section h1 {
 * https://itnext.io/v8-deep-dives-understanding-map-internals-45eb94a183df
 * http://www.jucs.org/jucs_14_21/eliminating_cycles_in_weak/jucs_14_21_3481_3497_barros.pdf
 * https://v8.dev/blog/concurrent-marking
+* https://v8.dev/blog/trash-talk
 
 ---
 
